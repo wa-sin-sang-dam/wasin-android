@@ -1,23 +1,17 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "com.wasin.android"
+    namespace = "com.wasin.presentation"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.wasin.android"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -50,11 +44,6 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":presentation"))
-    implementation(project(":data"))
-    implementation(project(":domain"))
-    implementation(project(":theme"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

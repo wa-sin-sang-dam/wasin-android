@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.wasin.android"
+    namespace = "com.wasin.admin"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.wasin.android"
+        applicationId = "com.wasin.admin"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
