@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "wasin-android"
-include(":app", ":domain", ":presentation", ":data", ":theme", ":admin", ":super_admin")
+include(":app", ":domain", ":presentation", ":data", ":admin", ":super_admin")
