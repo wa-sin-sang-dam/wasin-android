@@ -52,9 +52,6 @@ android {
 dependencies {
 
     implementation(project(":presentation"))
-    implementation(project(":data"))
-    implementation(project(":domain"))
-    implementation(project(":theme"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
