@@ -17,12 +17,11 @@ import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.WhiteLongButton
-import com.wasin.presentation._theme.Dimens
 
 @Composable
 fun LoginScreen() {
     LazyColumn (
-        modifier = Modifier.padding(Dimens.PaddingNormal).fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

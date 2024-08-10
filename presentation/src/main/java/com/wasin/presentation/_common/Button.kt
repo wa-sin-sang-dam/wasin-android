@@ -69,12 +69,13 @@ fun GrayLongButton(
         color = gray_E8E8E8,
         textColor = Color.Black,
         style = typography.bodyLarge,
-        padding = 9.dp
+        verticalPadding = 9.dp
     )
 }
 
 @Composable
 fun ShortButton(
+    modifier: Modifier = Modifier,
     text: String = "",
     onClick: () -> Unit,
     isSelected: Boolean = false
@@ -82,13 +83,14 @@ fun ShortButton(
     var selected by remember { mutableStateOf(isSelected) }
     DefaultButton(
         text = text,
-        modifier = Modifier.wrapContentWidth(),
+        modifier = modifier.wrapContentWidth(),
         color = if(selected) main_blue else Color.White,
         textColor = if(selected) Color.White else Color.Black,
         border = if(selected) null else BorderStroke(1.dp, gray_C9C9C9),
         shape = RoundedCornerShape(30.dp),
         style = typography.titleSmall,
-        padding = 5.dp,
+        horizontalPadding = 20.dp,
+        verticalPadding = 5.dp,
         onClick = {
             onClick()
             selected = !selected
@@ -105,14 +107,15 @@ fun DefaultButton(
     textColor: Color = Color.White,
     border: BorderStroke? = null,
     shape: Shape = RoundedCornerShape(10.dp),
-    padding: Dp = 13.dp,
+    horizontalPadding: Dp = 15.dp,
+    verticalPadding: Dp = 13.dp,
     style: TextStyle = typography.displayLarge
 ) {
     Button(
         modifier = modifier.wrapContentHeight(),
         onClick = onClick,
         shape = shape,
-        contentPadding = PaddingValues(horizontal = 15.dp, vertical = padding),
+        contentPadding = PaddingValues(horizontal = horizontalPadding, vertical = verticalPadding),
         interactionSource = NoRippleInteractionSource,
         border = border,
         colors = ButtonDefaults.buttonColors(
