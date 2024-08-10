@@ -12,7 +12,7 @@ import com.wasin.presentation.R
 val SuiteFamily = FontFamily(
     Font(R.font.bold, FontWeight.Bold, FontStyle.Normal),
     Font(R.font.extra_bold, FontWeight.ExtraBold, FontStyle.Normal),
-    Font(R.font.extra_light, FontWeight.ExtraLight, FontStyle.Normal),
+    Font(R.font.light, FontWeight.ExtraLight, FontStyle.Normal),
     Font(R.font.light, FontWeight.Light, FontStyle.Normal),
     Font(R.font.medium, FontWeight.Medium, FontStyle.Normal),
     Font(R.font.heavy, FontWeight.Black, FontStyle.Normal),
