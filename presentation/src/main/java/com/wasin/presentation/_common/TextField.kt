@@ -1,5 +1,9 @@
 package com.wasin.presentation._common
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
@@ -14,7 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -54,11 +60,40 @@ fun TextField(
             singleLine = false,
             visualTransformation = VisualTransformation.None,
             interactionSource = NoRippleInteractionSource,
-            placeholder = { TextFieldPlaceHolder(placeholder) },
+            placeholder = { TextFieldPlaceHolder(placeholder = placeholder) },
             colors = OutlinedTextFieldDefaults.colors(),
             contentPadding = PaddingValues(10.dp),
             container = { TextFieldOutlineBorder() },
         )
+    }
+}
+
+@Composable
+fun TextFieldCardWithTitle(
+    onClick: () -> Unit = {},
+    title: String = "",
+    placeholder: String = "",
+) {
+    Column {
+        Text(
+            text = title,
+            style = typography.titleMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Box(
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.small)
+                .border(BorderStroke(1.dp, gray_C9C9C9), MaterialTheme.shapes.small)
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = 44.dp)
+                .clickable(onClick = onClick),
+            ) {
+            TextFieldPlaceHolder(
+                modifier = Modifier.align(Alignment.CenterStart)
+                    .padding(10.dp),
+                placeholder = "회사 이름을 검색해주세요."
+            )
+        }
     }
 }
 
@@ -101,8 +136,12 @@ private fun TextFieldOutlineBorder() {
 }
 
 @Composable
-private fun TextFieldPlaceHolder(placeholder: String) {
+private fun TextFieldPlaceHolder(
+    modifier: Modifier = Modifier,
+    placeholder: String
+) {
     Text(
+        modifier = modifier,
         text = placeholder,
         style = typography.bodyMedium,
         color = gray_808080,

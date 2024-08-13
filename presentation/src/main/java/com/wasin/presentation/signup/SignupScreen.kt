@@ -2,13 +2,16 @@ package com.wasin.presentation.signup
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -76,15 +79,26 @@ fun EmailCodeField(
             .height(44.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        TextField(
-            modifier = Modifier.weight(0.7f),
-            text = "",
-            onValueChange = { },
-            placeholder = "인증번호",
-            keyboardType = KeyboardType.Number
-        )
+        Box(
+            modifier = Modifier.weight(1.4f)
+        ) {
+            TextField(
+                text = "",
+                onValueChange = { },
+                placeholder = "인증번호",
+                keyboardType = KeyboardType.Number
+            )
+            Text(
+                text = "02:33",
+                style = typography.bodyMedium,
+                modifier = Modifier
+                    .padding(horizontal = 15.dp)
+                    .align(Alignment.CenterEnd),
+                color = Color.Red
+            )
+        }
         DefaultButton(
-            text = "인증번호 발송 02:57",
+            text = "인증번호 발송",
             modifier = Modifier.weight(1f),
             color = Color.White,
             textColor = main_blue,
