@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.wasin.presentation._common.addFocusCleaner
 import com.wasin.presentation._theme.Dimens
 import com.wasin.presentation._theme.WasinTheme
-import com.wasin.presentation.company_super_admin.CompanySuperAdminScreen
+import com.wasin.presentation.profile.ProfileScreen
 
 @Preview
 @Composable
@@ -26,7 +26,7 @@ fun preview() {
             .addFocusCleaner(focusManager)
     ) {
         WasinTheme {
-            CompanySuperAdminScreen()
+            ProfileScreen()
         }
         it
     }

@@ -109,7 +109,7 @@ fun DefaultButton(
     shape: Shape = RoundedCornerShape(10.dp),
     horizontalPadding: Dp = 15.dp,
     verticalPadding: Dp = 13.dp,
-    style: TextStyle = typography.displayLarge
+    style: TextStyle = typography.titleMedium
 ) {
     Button(
         modifier = modifier.wrapContentHeight(),

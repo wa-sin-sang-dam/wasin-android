@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +37,7 @@ import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
 import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
+import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.TextFieldCardWithTitle
 import com.wasin.presentation._common.TextFieldWithTitle
@@ -130,7 +130,7 @@ fun CompanyItemComponent() {
             color = gray_808080,
             modifier = Modifier.padding(top = 7.dp, bottom = 10.dp)
         )
-        Divider()
+        GrayDivider()
     }
 }
 
