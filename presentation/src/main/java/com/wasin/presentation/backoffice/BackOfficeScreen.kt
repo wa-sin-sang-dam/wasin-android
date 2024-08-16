@@ -13,13 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun BackOfficeScreen() {
+fun BackOfficeScreen(navController: NavController) {
     val nameList = listOf("남원정", "권내현", "장원석", "남원정", "권내현", "장원석")
     WithTitle(
         title = "관리자 승인 대기"

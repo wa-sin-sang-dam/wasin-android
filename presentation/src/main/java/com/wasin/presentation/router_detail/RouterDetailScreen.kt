@@ -10,18 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation.setting.SettingContentTheme
 import com.wasin.presentation.setting.WithArrowItem
 
 @Composable
 fun RouterDetailScreen(
-    routerName: String = "휴게실 Wifi"
+    navController: NavController
 ) {
-    WithTitle(routerName) {
+    WithTitle("휴게실 Wifi") {
         item {
             Box (
                 modifier = Modifier.fillMaxWidth()
@@ -33,7 +35,12 @@ fun RouterDetailScreen(
         item { RouterState() }
         item { RouterMonitoring() }
         item { SystemRestore() }
-        item { Editing() }
+        item {
+            Editing(
+                onUpdateClick = { navController.navigate(WasinScreen.RouterUpdateScreen.route) },
+                onDeleteClick = { }
+            )
+        }
     }
 }
 
@@ -92,16 +99,12 @@ fun SystemRestore() {
 }
 
 @Composable
-fun Editing() {
+fun Editing(onUpdateClick: () -> Unit, onDeleteClick: () -> Unit) {
     SettingContentTheme(
         title = "편집하기",
         isLast = true
     ) {
-        WithArrowItem("수정하기") {
-
-        }
-        WithArrowItem("삭제하기") {
-
-        }
+        WithArrowItem("수정하기", onUpdateClick)
+        WithArrowItem("삭제하기", onDeleteClick)
     }
 }

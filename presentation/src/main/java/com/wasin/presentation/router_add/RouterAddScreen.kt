@@ -11,16 +11,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun RouterAddScreen() {
+fun RouterAddScreen(navController: NavController) {
     WithTitle("라우터 추가") {
         item {
             TextFieldWithTitle(
@@ -35,7 +37,11 @@ fun RouterAddScreen() {
             )
         }
         item { RouterPositionInImage() }
-        item { BlueLongButton(text = "등록하기") }
+        item {
+            BlueLongButton(text = "등록하기") {
+                navController.navigate(WasinScreen.RouterListScreen.route)
+            }
+        }
     }
 }
 

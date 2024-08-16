@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation.R
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.WithTitle
@@ -25,7 +26,7 @@ import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun SettingScreen() {
+fun SettingScreen(navController: NavController) {
     WithTitle (
         title = "설정"
     ) {

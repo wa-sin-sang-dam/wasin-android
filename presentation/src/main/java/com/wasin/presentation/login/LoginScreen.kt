@@ -13,13 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.WhiteLongButton
+import com.wasin.presentation._navigate.WasinScreen
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController,
+    onNavigate: () -> Unit = {}
+) {
     LazyColumn (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -27,8 +32,8 @@ fun LoginScreen() {
     ) {
         item { WasinLogo() }
         item { LoginTextField() }
-        item { LoginButton{ /* onClick */ } }
-        item { SignupButton{ /* onClick */ } }
+        item { LoginButton(onNavigate) }
+        item { SignupButton{ navController.navigate(WasinScreen.SignupScreen.route) } }
     }
 }
 

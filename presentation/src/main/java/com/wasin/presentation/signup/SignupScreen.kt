@@ -16,17 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.DefaultButton
 import com.wasin.presentation._common.GrayLongButton
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.main_blue
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun SignupScreen() {
+fun SignupScreen(navController: NavController) {
     WithTitle(
         title = "회원가입"
     ) {
@@ -35,7 +37,11 @@ fun SignupScreen() {
         item { PasswordField() }
         item { PasswordConfirmField() }
         item { Spacer(modifier = Modifier.height(5.dp)) }
-        item { BlueLongButton(text = "가입 완료") { } }
+        item {
+            BlueLongButton(text = "가입 완료") {
+                navController.navigate(WasinScreen.LoginScreen.route)
+            }
+        }
     }
 }
 

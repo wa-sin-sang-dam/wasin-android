@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_E8E8E8
@@ -30,7 +31,7 @@ import com.wasin.presentation._theme.main_blue
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController) {
     WithTitle(
         title = "프로파일 설정",
         description = "프로파일에 따라 여러 공유기의 설정을 한 번에 변경할 수 있어요. 자동 변경일 경우 상황에 따라 최적의 프로파일을 시스템이 알아서 찾아서 변경해줘요."

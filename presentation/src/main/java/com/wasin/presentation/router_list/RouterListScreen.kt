@@ -2,6 +2,7 @@ package com.wasin.presentation.router_list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,16 +16,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.main_green
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun RouterListScreen() {
+fun RouterListScreen(navController: NavController) {
     WithTitle(
         title = "라우터 관리",
         description = "라우터 상태에 따라 원활할 경우 초록색, 불안정할 경우 빨간색으로 나타나요. \n" +
@@ -35,14 +38,16 @@ fun RouterListScreen() {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 CompanyImageItem()
-                ImageMarker(Modifier.offset(90.dp, 10.dp))
+                ImageMarker(Modifier.offset(90.dp, 10.dp)) {
+                    navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=-1")
+                }
                 ImageMarker(Modifier.offset(20.dp, 100.dp))
             }
         }
         item {
             BlueLongButton(
                 text = "라우터 추가",
-                onClick = { }
+                onClick = { navController.navigate(WasinScreen.RouterAddScreen.route) }
             )
         }
         item {
@@ -52,7 +57,11 @@ fun RouterListScreen() {
                 modifier = Modifier.padding(top = 25.dp)
              )
         }
-        item { RouterItemComponent() }
+        item {
+            RouterItemComponent() {
+                navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=1")
+            }
+        }
         item { RouterItemComponent() }
         item { RouterItemComponent() }
         item { RouterItemComponent() }
@@ -62,13 +71,15 @@ fun RouterListScreen() {
 @Composable
 fun RouterItemComponent(
     name: String = "휴게소 Wifi ",
-    score: Int = 89
+    score: Int = 89,
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(30.dp))
             .fillMaxWidth()
             .wrapContentHeight()
+            .clickable(onClick = onClick)
             .border(BorderStroke(0.5.dp, gray_E8E8E8), RoundedCornerShape(30.dp))
             .padding(horizontal = 30.dp, vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically

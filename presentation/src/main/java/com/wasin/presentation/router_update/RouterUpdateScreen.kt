@@ -1,18 +1,15 @@
 package com.wasin.presentation.router_update
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.TextFieldWithTitle
-import com.wasin.presentation._common.WhiteLongButton
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation.router_add.RouterPositionInImage
 
 @Composable
-fun RouterUpdateScreen() {
+fun RouterUpdateScreen(navController: NavController) {
     WithTitle("라우터 수정") {
         item {
             TextFieldWithTitle(
@@ -22,9 +19,9 @@ fun RouterUpdateScreen() {
         }
         item { RouterPositionInImage() }
         item {
-            BlueLongButton(text = "수정하기")
-            Spacer(modifier = Modifier.height(10.dp))
-            WhiteLongButton(text = "삭제하기")
+            BlueLongButton(text = "수정하기") {
+                navController.navigate(WasinScreen.RouterListScreen.route)
+            }
         }
     }
 }

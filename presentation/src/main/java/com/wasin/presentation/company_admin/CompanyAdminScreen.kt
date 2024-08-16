@@ -2,6 +2,8 @@ package com.wasin.presentation.company_admin
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -9,14 +11,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_979797
 import com.wasin.presentation._theme.main_blue
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun CompanyAdminScreen() {
+fun CompanyAdminScreen(navController: NavController) {
     WithTitle(
         title = "회사 등록"
     ) {
@@ -26,6 +31,13 @@ fun CompanyAdminScreen() {
         item { CompanyAdminItemComponent(false) }
         item { CompanyAdminItemComponent(false) }
         item { CompanyAdminItemComponent(false) }
+        item {
+            Spacer(modifier = Modifier.height(30.dp))
+            BlueLongButton(
+                text = "등록 완료",
+                onClick = { navController.navigate(WasinScreen.LockSettingScreen.route) }
+            )
+        }
     }
 }
 

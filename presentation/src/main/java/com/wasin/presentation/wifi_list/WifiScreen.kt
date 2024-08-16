@@ -21,21 +21,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation.R
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.main_pink
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun WifiScreen() {
+fun WifiScreen(navController: NavController) {
     WithTitle(
         title = "Wifi 연결",
         description = "자동 또는 수동으로 최적의 와이파이에 연결되도록 설정할 수 있어요.",
-        containSetting = true
+        containSetting = true,
+        onSettingClick = { navController.navigate(WasinScreen.SettingScreen.route) }
     ) {
         item { WifiAutoMode() }
         item { GrayDivider() }
