@@ -3,47 +3,41 @@ package com.wasin.admin
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.wasin.admin.ui.theme.WasinandroidTheme
-import com.wasin.presentation.login.LoginScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.wasin.admin.navigate.adminNavGraph
+import com.wasin.presentation._navigate.BottomNavItem
+import com.wasin.presentation._navigate.BottomNavigationBar
+import com.wasin.presentation._navigate.WasinScreen
+import com.wasin.presentation._navigate.commonAdminNavGraph
+import com.wasin.presentation._navigate.commonNavGraph
+import com.wasin.presentation._theme.WasinAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WasinandroidTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        LoginScreen()
+            val navController = rememberNavController()
+            WasinAppTheme(
+                bottomBar = {
+                    BottomNavigationBar(
+                        navController = navController,
+                        screens = listOf(BottomNavItem.Monitoring, BottomNavItem.Router,
+                            BottomNavItem.Profile, BottomNavItem.Setting)
+                    )
+                },
+                content = {
+                    NavHost(
+                        navController = navController,
+                        startDestination = WasinScreen.SplashScreen.route,
+                        route = "wasin_admin_route"
+                    ){
+                        commonNavGraph(navController = navController)
+                        commonAdminNavGraph(navController = navController)
+                        adminNavGraph(navController = navController)
                     }
                 }
-            }
+            )
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WasinandroidTheme {
-        Greeting("Android")
     }
 }
