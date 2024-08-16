@@ -7,11 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.wasin.presentation._common.LockComponent
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun LockSettingScreen() {
+fun LockSettingScreen(
+    navController: NavController,
+    onNavigate: () -> Unit,
+) {
     Column(
         modifier = Modifier.padding(top = 50.dp),
         horizontalAlignment = Alignment.CenterHorizontally

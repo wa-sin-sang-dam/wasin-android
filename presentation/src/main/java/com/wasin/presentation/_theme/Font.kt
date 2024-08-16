@@ -31,7 +31,7 @@ val typography = Typography(
     // 소제목
     titleMedium = TextStyle(
         fontFamily = SuiteFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
     ),
     titleSmall = TextStyle(
@@ -42,7 +42,7 @@ val typography = Typography(
     // 버튼
     displayLarge = TextStyle(
         fontFamily = SuiteFamily,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
     ),
     // 본문, 텍스트 필드
@@ -63,5 +63,10 @@ val typography = Typography(
         fontFamily = SuiteFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = SuiteFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 10.sp
     ),
 )

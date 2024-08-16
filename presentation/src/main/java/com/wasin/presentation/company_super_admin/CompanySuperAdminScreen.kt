@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,19 +34,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
+import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.TextFieldCardWithTitle
 import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun CompanySuperAdminScreen() {
+fun CompanySuperAdminScreen(navController: NavController) {
     val isDialogOpen = remember { mutableStateOf(false) }
     if (isDialogOpen.value) CompanyDialog { isDialogOpen.value = false }
 
@@ -69,7 +71,11 @@ fun CompanySuperAdminScreen() {
             )
         }
         item { CompanyImageInput() }
-        item { BlueLongButton(text = "등록 완료") }
+        item {
+            BlueLongButton(text = "등록 완료") {
+                navController.navigate(WasinScreen.LockSettingScreen.route)
+            }
+        }
     }
 }
 
@@ -130,7 +136,7 @@ fun CompanyItemComponent() {
             color = gray_808080,
             modifier = Modifier.padding(top = 7.dp, bottom = 10.dp)
         )
-        Divider()
+        GrayDivider()
     }
 }
 
