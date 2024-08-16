@@ -1,5 +1,6 @@
 package com.wasin.presentation._common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -39,9 +40,10 @@ fun CompanyImageItem(
 @Composable
 fun ImageMarker(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Icon(
-        modifier = modifier.size(40.dp),
+        modifier = modifier.size(40.dp).clickable(onClick = onClick),
         imageVector = Icons.Filled.LocationOn,
         contentDescription = "화살표 그림(이동하기)",
         tint = main_green,

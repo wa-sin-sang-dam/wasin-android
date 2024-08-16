@@ -2,6 +2,7 @@ package com.wasin.presentation._common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,13 +28,14 @@ fun WithTitle(
     title: String = "",
     description: String? = null,
     containSetting: Boolean = false,
+    onSettingClick: () -> Unit = {},
     content: LazyListScope.() -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.background(Color.White),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        item { TitleAndContents(title, description, containSetting) }
+        item { TitleAndContents(title, description, containSetting, onSettingClick) }
         content()
         item { Spacer(modifier = Modifier.height(10.dp)) }
     }
@@ -43,7 +45,8 @@ fun WithTitle(
 fun TitleAndContents(
     text: String,
     description: String?,
-    containSetting: Boolean
+    containSetting: Boolean,
+    onSettingClick: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -66,7 +69,10 @@ fun TitleAndContents(
             }
         }
         if (containSetting) {
-            SettingImage(modifier = Modifier.align(Alignment.TopEnd))
+            SettingImage(
+                modifier = Modifier.clickable(onClick = onSettingClick)
+                    .align(Alignment.TopEnd)
+            )
         }
     }
 }
