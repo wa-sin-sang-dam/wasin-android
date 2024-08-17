@@ -28,7 +28,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.typography
-import com.wasin.presentation.util.NoRippleInteractionSource
+import com.wasin.presentation._util.NoRippleInteractionSource
 
 @Composable
 fun BottomNavigationBar(
@@ -70,6 +70,7 @@ private fun shouldShowBottomNavigation(
         WasinScreen.LoginScreen.route,
         WasinScreen.SignupScreen.route,
         WasinScreen.CompanyAdminScreen.route,
+        WasinScreen.CompanySuperAdminScreen.route,
         WasinScreen.LockConfirmScreen.route,
         WasinScreen.LockSettingScreen.route,
     )

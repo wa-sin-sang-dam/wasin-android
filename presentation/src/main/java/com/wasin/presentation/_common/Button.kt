@@ -25,7 +25,7 @@ import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.main_blue
 import com.wasin.presentation._theme.typography
-import com.wasin.presentation.util.NoRippleInteractionSource
+import com.wasin.presentation._util.NoRippleInteractionSource
 
 @Composable
 fun BlueLongButton(
@@ -60,7 +60,8 @@ fun WhiteLongButton(
 fun GrayLongButton(
     modifier: Modifier = Modifier,
     text: String = "",
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    enabled: Boolean = true,
 ) {
     DefaultButton(
         text = text,
@@ -69,7 +70,8 @@ fun GrayLongButton(
         color = gray_E8E8E8,
         textColor = Color.Black,
         style = typography.bodyLarge,
-        verticalPadding = 9.dp
+        verticalPadding = 9.dp,
+        enabled = enabled,
     )
 }
 
@@ -109,15 +111,17 @@ fun DefaultButton(
     shape: Shape = RoundedCornerShape(10.dp),
     horizontalPadding: Dp = 15.dp,
     verticalPadding: Dp = 13.dp,
-    style: TextStyle = typography.titleMedium
+    style: TextStyle = typography.titleMedium,
+    enabled: Boolean = true,
 ) {
     Button(
         modifier = modifier.wrapContentHeight(),
         onClick = onClick,
+        enabled = enabled,
         shape = shape,
         contentPadding = PaddingValues(horizontal = horizontalPadding, vertical = verticalPadding),
         interactionSource = NoRippleInteractionSource,
-        border = border,
+        border = if (enabled) border else null,
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
             contentColor = textColor,

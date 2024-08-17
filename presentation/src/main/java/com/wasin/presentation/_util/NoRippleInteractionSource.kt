@@ -1,4 +1,4 @@
-package com.wasin.presentation.util
+package com.wasin.presentation._util
 
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
