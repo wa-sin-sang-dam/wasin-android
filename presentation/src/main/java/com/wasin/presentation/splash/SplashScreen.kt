@@ -10,17 +10,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation.R
-import com.wasin.presentation._navigate.WasinScreen
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController) {
+fun SplashScreen(
+    navController: NavController,
+    viewModel: SplashViewModel = hiltViewModel()
+) {
     LaunchedEffect(key1 = true){
         delay(500)
         navController.popBackStack()
-        navController.navigate(WasinScreen.LoginScreen.route)
+        navController.navigate(viewModel.getScreen())
     }
     Box (
         modifier = Modifier.fillMaxSize()

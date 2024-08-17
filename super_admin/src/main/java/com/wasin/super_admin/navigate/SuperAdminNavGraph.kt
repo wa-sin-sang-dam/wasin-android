@@ -8,6 +8,8 @@ import com.wasin.presentation.backoffice.BackOfficeScreen
 import com.wasin.presentation.company_super_admin.CompanySuperAdminScreen
 import com.wasin.presentation.lock_confirm.LockConfirmScreen
 import com.wasin.presentation.lock_setting.LockSettingScreen
+import com.wasin.presentation.login.LoginScreen
+import com.wasin.presentation.signup.SignupScreen
 
 fun NavGraphBuilder.superAdminNavGraph(
     navController: NavController
@@ -37,5 +39,18 @@ fun NavGraphBuilder.superAdminNavGraph(
                 onNavigate = { navController.navigate(WasinScreen.BackOfficeScreen.route) }
             )
         }
+    )
+    composable(
+        route = WasinScreen.LoginScreen.route,
+        content = {
+            LoginScreen(
+                navController = navController,
+                nextScreen = WasinScreen.CompanySuperAdminScreen.route
+            )
+        }
+    )
+    composable(
+        route = WasinScreen.SignupScreen.route,
+        content = { SignupScreen(navController, "super_admin") },
     )
 }

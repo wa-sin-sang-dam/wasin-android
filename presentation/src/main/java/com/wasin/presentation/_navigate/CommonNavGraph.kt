@@ -5,7 +5,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.wasin.presentation.login.LoginScreen
 import com.wasin.presentation.monitoring.MonitoringScreen
 import com.wasin.presentation.profile.ProfileScreen
 import com.wasin.presentation.router_add.RouterAddScreen
@@ -13,7 +12,6 @@ import com.wasin.presentation.router_detail.RouterDetailScreen
 import com.wasin.presentation.router_list.RouterListScreen
 import com.wasin.presentation.router_update.RouterUpdateScreen
 import com.wasin.presentation.setting.SettingScreen
-import com.wasin.presentation.signup.SignupScreen
 import com.wasin.presentation.splash.SplashScreen
 
 fun NavGraphBuilder.commonNavGraph(
@@ -22,10 +20,6 @@ fun NavGraphBuilder.commonNavGraph(
     composable(
         route = WasinScreen.SplashScreen.route,
         content = { SplashScreen(navController) }
-    )
-    composable(
-        route = WasinScreen.SignupScreen.route,
-        content = { SignupScreen(navController) }
     )
     composable(
         route = WasinScreen.SettingScreen.route,
@@ -71,13 +65,5 @@ fun NavGraphBuilder.commonAdminNavGraph(
             },
         ),
         content = { RouterUpdateScreen(navController) }
-    )
-    composable(
-        route = WasinScreen.LoginScreen.route,
-        content = {
-            LoginScreen(navController) {
-                navController.navigate(WasinScreen.CompanyAdminScreen.route)
-            }
-        }
     )
 }
