@@ -4,11 +4,14 @@ import android.content.Context
 import android.util.Log
 import com.wasin.data._const.DataStoreKey
 import com.wasin.data._const.HttpRoutes
+import com.wasin.data.api.CompanyApi
 import com.wasin.data.api.UserApi
+import com.wasin.data.data_api.CompanyRepository
 import com.wasin.data.data_api.UserRepository
 import com.wasin.data.datastore.WasinDataStore
 import com.wasin.data.model.user.ReissueRequest
 import com.wasin.data.model.user.ReissueResponse
+import com.wasin.data.repository.CompanyRepositoryImpl
 import com.wasin.data.repository.UserRepositoryImpl
 import com.wasin.data.util.ApiUtils
 import dagger.Module
@@ -33,12 +36,10 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.util.appendIfNameAbsent
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
@@ -77,6 +78,16 @@ class NetworkModule {
             }
             install(Auth) {
                 bearer {
+                    loadTokens {
+                        val accessToken = WasinDataStore(context).getData(accessKey)
+                        val refreshToken = WasinDataStore(context).getData(refreshKey)
+                        if (accessToken.isNotEmpty()) {
+                            BearerTokens(
+                                accessToken = accessToken,
+                                refreshToken = refreshToken
+                            )
+                        } else null
+                    }
                     refreshTokens {
                         val token = getRefreshToken(context)
                         token
@@ -94,10 +105,6 @@ class NetworkModule {
                     host = HttpRoutes.BASE_HOST.path
                     port = 8080
                     path(HttpRoutes.BASE_V1_PATH.path)
-                }
-                val accessToken = WasinDataStore(context).getData(accessKey)
-                if (accessToken.isNotEmpty()) {
-                    headers.appendIfNameAbsent(HttpHeaders.Authorization, accessToken)
                 }
             }
         }
@@ -147,5 +154,16 @@ class NetworkModule {
     @Singleton
     fun provideUserRepositoryImpl(userApi: UserApi): UserRepositoryImpl {
         return UserRepositoryImpl(userApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCompanyApi(client: HttpClient): CompanyRepository {
+        return CompanyApi(client)
+    }
+    @Provides
+    @Singleton
+    fun provideCompanyRepositoryImpl(companyApi: CompanyApi): CompanyRepositoryImpl {
+        return CompanyRepositoryImpl(companyApi)
     }
 }
