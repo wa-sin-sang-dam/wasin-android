@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.wasin.presentation.lock_setting.LockSettingScreen
 import com.wasin.presentation.monitoring.MonitoringScreen
 import com.wasin.presentation.profile.ProfileScreen
 import com.wasin.presentation.router_add.RouterAddScreen
@@ -45,6 +46,10 @@ fun NavGraphBuilder.commonAdminNavGraph(
     composable(
         route = WasinScreen.RouterListScreen.route,
         content = { RouterListScreen(navController) }
+    )
+    composable(
+        route = WasinScreen.LockSettingScreen.route,
+        content = { LockSettingScreen(navController) }
     )
     composable(
         route = WasinScreen.RouterDetailScreen.route + "?routerId={routerId}",

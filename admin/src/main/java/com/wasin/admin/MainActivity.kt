@@ -12,7 +12,9 @@ import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._navigate.commonAdminNavGraph
 import com.wasin.presentation._navigate.commonNavGraph
 import com.wasin.presentation._theme.WasinAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
