@@ -78,6 +78,7 @@ fun TextField(
 fun TextFieldCardWithTitle(
     onClick: () -> Unit = {},
     title: String = "",
+    text: String = "",
     placeholder: String = "",
 ) {
     Column {
@@ -93,12 +94,14 @@ fun TextFieldCardWithTitle(
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 44.dp)
                 .clickable(onClick = onClick),
-            ) {
-            TextFieldPlaceHolder(
+        ) {
+            Text(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(10.dp),
-                placeholder = placeholder
+                text = if (text.isEmpty()) placeholder else text,
+                style = typography.bodyMedium,
+                color = if (text.isEmpty()) gray_808080 else Color.Black,
             )
         }
     }

@@ -35,7 +35,11 @@ fun LoginScreen(
         eventFlow = viewModel.eventFlow,
         onNavigate = {
             viewModel.saveScreenState(nextScreen)
-            navController.navigate(nextScreen)
+            navController.navigate(nextScreen) {
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
         }
     )
     LazyColumn (

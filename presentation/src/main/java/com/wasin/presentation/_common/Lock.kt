@@ -1,6 +1,7 @@
 package com.wasin.presentation._common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,15 +27,22 @@ import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.typography
 
 @Composable
-fun LockComponent() {
+fun LockComponent(
+    password: String = "",
+    onAdd: (String) -> Unit = {},
+    onDelete: () -> Unit = {},
+) {
     Column {
-        LockInputField()
-        LockDialKeypad()
+        LockInputField( password)
+        LockDialKeypad(onAdd, onDelete)
     }
 }
 
 @Composable
-fun LockDialKeypad() {
+fun LockDialKeypad(
+    onAdd: (String) -> Unit = {},
+    onDelete: () -> Unit = {},
+) {
     val dialList = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0")
     LazyVerticalGrid(
         modifier = Modifier
@@ -46,15 +54,19 @@ fun LockDialKeypad() {
         verticalArrangement = Arrangement.spacedBy(40.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        items(dialList) { DialKeypadItem(it) }
-        item { BackErase() }
+        items(dialList) { DialKeypadItem(it) { onAdd(it) } }
+        item { BackErase(onDelete) }
     }
 }
 
 @Composable
-private fun BackErase() {
+private fun BackErase(
+    onDelete: () -> Unit = {},
+) {
     Box(
-        modifier = Modifier.fillMaxWidth().height(50.dp),
+        modifier = Modifier.fillMaxWidth()
+            .height(50.dp)
+            .clickable(onClick = onDelete),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -66,37 +78,43 @@ private fun BackErase() {
 }
 
 @Composable
-private fun DialKeypadItem(it: String) {
+private fun DialKeypadItem(
+    num: String,
+    onAdd: () -> Unit
+) {
     Box(
-        modifier = Modifier.fillMaxWidth().height(50.dp),
+        modifier = Modifier.fillMaxWidth()
+            .height(50.dp)
+            .clickable(onClick = onAdd),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = it, style = typography.titleLarge)
+        Text(text = num, style = typography.titleLarge)
     }
 }
 
 @Composable
-fun LockInputField() {
+fun LockInputField(
+    password: String = ""
+) {
     Row (
         modifier = Modifier
             .padding(vertical = 50.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)
     ) {
-        LockInputItem()
-        LockInputItem()
-        LockInputItem()
-        LockInputItem()
+        for (i in 0..3) {
+            LockInputItem(password.getOrElse(i) { ' ' })
+        }
     }
 }
 
 @Composable
-private fun LockInputItem() {
+private fun LockInputItem(num: Char) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "2",
+            text = num.toString(),
             style = typography.titleLarge
         )
         Divider(

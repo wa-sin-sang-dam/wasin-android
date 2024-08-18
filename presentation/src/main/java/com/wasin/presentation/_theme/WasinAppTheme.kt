@@ -1,5 +1,6 @@
 package com.wasin.presentation._theme
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -22,6 +23,7 @@ fun WasinAppTheme(
         ) {
             Surface(
                 modifier = Modifier
+                    .background(Color.White)
                     .addFocusCleaner(focusManager)
                     .padding(Dimens.ScreenPadding)
                     .fillMaxSize()
