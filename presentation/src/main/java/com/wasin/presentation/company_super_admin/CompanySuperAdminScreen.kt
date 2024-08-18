@@ -1,7 +1,6 @@
 package com.wasin.presentation.company_super_admin
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,11 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.wasin.data.model.company.FindAllCompanyByOpenAPIResponse
 import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.GrayDivider
@@ -47,12 +50,37 @@ import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
+import com.wasin.presentation._util.FileUtil
+import com.wasin.presentation._util.LaunchedEffectEvent
+import java.io.File
 
 @Composable
-fun CompanySuperAdminScreen(navController: NavController) {
+fun CompanySuperAdminScreen(
+    navController: NavController,
+    viewModel: CompanySuperAdminViewModel = hiltViewModel()
+) {
     val isDialogOpen = remember { mutableStateOf(false) }
-    if (isDialogOpen.value) CompanyDialog { isDialogOpen.value = false }
-
+    if (isDialogOpen.value) {
+        CompanyDialog (
+            companyList = viewModel.companyList.value.companyOpenAPIList,
+            companyName = viewModel.companyDTO.value.companyName,
+            enterCompany = { viewModel.onEvent(CompanySuperAdminEvent.EnterCompany(it)) },
+            searchCompany = { viewModel.onEvent(CompanySuperAdminEvent.SearchCompany) },
+            selectCompany = { a, b, c -> viewModel.onEvent(CompanySuperAdminEvent.SelectCompany(a, b, c)) },
+            onDismissRequest = { isDialogOpen.value = false }
+        )
+    }
+    LaunchedEffectEvent(
+        eventFlow = viewModel.eventFlow,
+        onNavigate = {
+            viewModel.saveScreenState(WasinScreen.LockSettingScreen.route)
+            navController.navigate(WasinScreen.LockSettingScreen.route){
+                popUpTo(navController.graph.id) {
+                    inclusive = true
+                }
+            }
+        }
+    )
     WithTitle(
         title = "회사 정보 입력"
     ) {
@@ -60,19 +88,26 @@ fun CompanySuperAdminScreen(navController: NavController) {
             TextFieldWithTitle(
                 title = "보안코드",
                 placeholder = "와신상담의 보안 코드를 입력해주세요.",
+                text = viewModel.companyDTO.value.serviceKey,
+                onValueChange = { viewModel.onEvent(CompanySuperAdminEvent.EnterCode(it)) }
             )
         }
         item {
             TextFieldCardWithTitle(
                 title = "회사",
                 placeholder = "회사 이름을 입력해주세요.",
+                text = viewModel.companyDTO.value.companyName,
                 onClick = { isDialogOpen.value = true }
             )
         }
-        item { CompanyImageInput() }
+        item {
+            CompanyImageInput() {
+                viewModel.onEvent(CompanySuperAdminEvent.EnterImage(it))
+            }
+        }
         item {
             BlueLongButton(text = "등록 완료") {
-                navController.navigate(WasinScreen.LockSettingScreen.route)
+                viewModel.onEvent(CompanySuperAdminEvent.Save)
             }
         }
     }
@@ -80,7 +115,12 @@ fun CompanySuperAdminScreen(navController: NavController) {
 
 @Composable
 fun CompanyDialog(
-    onDismissRequest: () -> Unit = {}
+    companyName: String = "",
+    enterCompany: (String) -> Unit,
+    searchCompany: () -> Unit,
+    selectCompany: (String, String, String) -> Unit,
+    onDismissRequest: () -> Unit = {},
+    companyList: List<FindAllCompanyByOpenAPIResponse.CompanyOpenAPIItem>
 ) {
     Dialog(onDismissRequest) {
         Column (
@@ -98,9 +138,9 @@ fun CompanyDialog(
             )
             Box {
                 TextField(
-                    text = "",
+                    text = companyName,
                     placeholder = "회사 이름을 입력해주세요.",
-                    onValueChange = {},
+                    onValueChange = enterCompany,
                     modifier = Modifier.padding(top = 30.dp, bottom = 25.dp)
                 )
                 Image(
@@ -108,6 +148,7 @@ fun CompanyDialog(
                     contentDescription = "search company",
                     modifier = Modifier
                         .padding(top = 5.dp, end = 20.dp)
+                        .clickable(onClick = searchCompany)
                         .height(20.dp)
                         .align(Alignment.CenterEnd)
                 )
@@ -115,22 +156,37 @@ fun CompanyDialog(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                item { CompanyItemComponent() }
-                item { CompanyItemComponent() }
+                items(companyList) {
+                    CompanyItemComponent(
+                        companyName = it.companyName,
+                        location = it.location,
+                        onClick = {
+                            selectCompany(it.companyName, it.companyFssId, it.location)
+                            onDismissRequest()
+                        },
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun CompanyItemComponent() {
-    Column {
+fun CompanyItemComponent(
+    companyName: String,
+    location: String,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .clickable(onClick = onClick)
+    ) {
         Text(
-            text = "한국은행",
+            text = companyName,
             style = typography.bodyLarge
         )
         Text(
-            text = "부산광역시 수영구 광안해변로 418",
+            text = location,
             style = typography.bodySmall,
             color = gray_808080,
             modifier = Modifier.padding(top = 7.dp, bottom = 10.dp)
@@ -141,11 +197,17 @@ fun CompanyItemComponent() {
 
 
 @Composable
-fun CompanyImageInput() {
+fun CompanyImageInput(
+    onImage: (File) -> Unit = {}
+) {
+    val context = LocalContext.current
     var image by remember { mutableStateOf(Uri.EMPTY) }
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { it?.let { image = it }}
+    ) { it?.let {
+        image = it
+        onImage(FileUtil.fileFromContentUri(it, context))
+    }}
 
     Column {
         Text(
