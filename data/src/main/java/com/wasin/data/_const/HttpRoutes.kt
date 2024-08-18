@@ -19,7 +19,7 @@ enum class HttpRoutes(
     REISSUE("user/auth/reissue"),
 
     // company
-    GET_OPEN_API("company/open-api"),
+    GET_OPEN_API("company/open-api/list"),
     GET_DB("company/db"),
     SAVE_COMPANY_OPEN_API("company/open-api"),
     SAVE_COMPANY_DB("company/db"),
