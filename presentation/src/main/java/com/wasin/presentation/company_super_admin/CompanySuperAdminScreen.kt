@@ -53,7 +53,6 @@ fun CompanySuperAdminScreen(navController: NavController) {
     val isDialogOpen = remember { mutableStateOf(false) }
     if (isDialogOpen.value) CompanyDialog { isDialogOpen.value = false }
 
-    Log.d("tagtag", isDialogOpen.toString())
     WithTitle(
         title = "회사 정보 입력"
     ) {

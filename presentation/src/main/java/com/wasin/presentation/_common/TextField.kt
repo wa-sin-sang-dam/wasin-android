@@ -29,9 +29,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_C9C9C9
+import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.main_blue
 import com.wasin.presentation._theme.typography
-import com.wasin.presentation.util.NoRippleInteractionSource
+import com.wasin.presentation._util.NoRippleInteractionSource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +41,9 @@ fun TextField(
     text: String = "",
     onValueChange: (String) -> Unit = {},
     placeholder: String = "",
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    enabled: Boolean = true
 ) {
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
@@ -50,20 +53,23 @@ fun TextField(
             .fillMaxWidth()
             .defaultMinSize(minHeight = 44.dp)
             .focusRequester(focusRequester),
-        textStyle = MaterialTheme.typography.bodyMedium,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+        textStyle = typography.bodyMedium,
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        visualTransformation = visualTransformation,
+        singleLine = true,
+        enabled = enabled
     ) {
         OutlinedTextFieldDefaults.DecorationBox(
             value = text,
             innerTextField = it,
-            enabled = true,
-            singleLine = false,
+            enabled = enabled,
+            singleLine = true,
             visualTransformation = VisualTransformation.None,
             interactionSource = NoRippleInteractionSource,
             placeholder = { TextFieldPlaceHolder(placeholder = placeholder) },
             colors = OutlinedTextFieldDefaults.colors(),
             contentPadding = PaddingValues(10.dp),
-            container = { TextFieldOutlineBorder() },
+            container = { TextFieldOutlineBorder(enabled) },
         )
     }
 }
@@ -89,9 +95,10 @@ fun TextFieldCardWithTitle(
                 .clickable(onClick = onClick),
             ) {
             TextFieldPlaceHolder(
-                modifier = Modifier.align(Alignment.CenterStart)
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
                     .padding(10.dp),
-                placeholder = "회사 이름을 검색해주세요."
+                placeholder = placeholder
             )
         }
     }
@@ -104,7 +111,9 @@ fun TextFieldWithTitle(
     text: String = "",
     onValueChange: (String) -> Unit = {},
     placeholder: String = "",
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    enabled: Boolean = true
 ) {
     Column {
         Text(
@@ -112,20 +121,22 @@ fun TextFieldWithTitle(
             style = typography.titleMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        TextField(modifier, text, onValueChange, placeholder, keyboardType)
+        TextField(modifier, text, onValueChange, placeholder, keyboardType, visualTransformation, enabled)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TextFieldOutlineBorder() {
+private fun TextFieldOutlineBorder(
+    enabled: Boolean
+) {
     OutlinedTextFieldDefaults.ContainerBox(
-        enabled = true,
+        enabled = enabled,
         isError = false,
         interactionSource = NoRippleInteractionSource,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedTextColor = Color.Black,
-            containerColor = Color.White,
+            focusedTextColor = if (enabled) Color.Black else gray_808080,
+            containerColor = if (enabled) Color.White else gray_E8E8E8,
             focusedPlaceholderColor = gray_C9C9C9,
             focusedBorderColor = Color.Black,
             unfocusedBorderColor = gray_C9C9C9,

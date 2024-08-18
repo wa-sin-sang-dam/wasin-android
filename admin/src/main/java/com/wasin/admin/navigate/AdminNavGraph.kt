@@ -7,6 +7,8 @@ import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation.company_admin.CompanyAdminScreen
 import com.wasin.presentation.lock_confirm.LockConfirmScreen
 import com.wasin.presentation.lock_setting.LockSettingScreen
+import com.wasin.presentation.login.LoginScreen
+import com.wasin.presentation.signup.SignupScreen
 
 fun NavGraphBuilder.adminNavGraph(
     navController: NavController
@@ -32,5 +34,18 @@ fun NavGraphBuilder.adminNavGraph(
                 onNavigate = { navController.navigate(WasinScreen.MonitoringScreen.route) }
             )
         }
+    )
+    composable(
+        route = WasinScreen.LoginScreen.route,
+        content = {
+            LoginScreen(
+                navController = navController,
+                nextScreen = WasinScreen.CompanyAdminScreen.route
+            )
+        }
+    )
+    composable(
+        route = WasinScreen.SignupScreen.route,
+        content = { SignupScreen(navController, "admin") },
     )
 }
