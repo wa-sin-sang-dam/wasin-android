@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation.company_admin.CompanyAdminScreen
 import com.wasin.presentation.lock_confirm.LockConfirmScreen
-import com.wasin.presentation.lock_setting.LockSettingScreen
 import com.wasin.presentation.login.LoginScreen
 import com.wasin.presentation.signup.SignupScreen
 
@@ -22,16 +21,7 @@ fun NavGraphBuilder.adminNavGraph(
         content = {
             LockConfirmScreen(
                 navController = navController,
-                onNavigate = { navController.navigate(WasinScreen.MonitoringScreen.route) }
-            )
-        }
-    )
-    composable(
-        route = WasinScreen.LockSettingScreen.route,
-        content = {
-            LockSettingScreen(
-                navController = navController,
-                onNavigate = { navController.navigate(WasinScreen.MonitoringScreen.route) }
+                nextScreen = WasinScreen.MonitoringScreen.route,
             )
         }
     )
