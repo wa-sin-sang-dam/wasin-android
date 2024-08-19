@@ -4,13 +4,16 @@ import android.content.Context
 import android.util.Log
 import com.wasin.data._const.DataStoreKey
 import com.wasin.data._const.HttpRoutes
+import com.wasin.data.api.BackOfficeApi
 import com.wasin.data.api.CompanyApi
 import com.wasin.data.api.UserApi
+import com.wasin.data.data_api.BackOfficeRepository
 import com.wasin.data.data_api.CompanyRepository
 import com.wasin.data.data_api.UserRepository
 import com.wasin.data.datastore.WasinDataStore
 import com.wasin.data.model.user.ReissueRequest
 import com.wasin.data.model.user.ReissueResponse
+import com.wasin.data.repository.BackOfficeRepositoryImpl
 import com.wasin.data.repository.CompanyRepositoryImpl
 import com.wasin.data.repository.UserRepositoryImpl
 import com.wasin.data.util.ApiUtils
@@ -166,4 +169,16 @@ class NetworkModule {
     fun provideCompanyRepositoryImpl(companyApi: CompanyApi): CompanyRepositoryImpl {
         return CompanyRepositoryImpl(companyApi)
     }
+
+    @Provides
+    @Singleton
+    fun provideBackOfficeApi(client: HttpClient): BackOfficeRepository {
+        return BackOfficeApi(client)
+    }
+    @Provides
+    @Singleton
+    fun provideBackOfficeRepositoryImpl(backOfficeApi: BackOfficeApi): BackOfficeRepositoryImpl {
+        return BackOfficeRepositoryImpl(backOfficeApi)
+    }
+
 }
