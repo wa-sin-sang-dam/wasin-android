@@ -13,24 +13,39 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.typography
+import com.wasin.presentation._util.LaunchedEffectEvent
 
 @Composable
-fun BackOfficeScreen(navController: NavController) {
-    val nameList = listOf("남원정", "권내현", "장원석", "남원정", "권내현", "장원석")
+fun BackOfficeScreen(
+    navController: NavController,
+    viewModel: BackOfficeViewModel = hiltViewModel()
+) {
+    LaunchedEffectEvent(viewModel.eventFlow)
     WithTitle(
         title = "관리자 승인 대기"
     ) {
-        items(nameList) { WaitingItem(it) }
+        items(viewModel.waitingList.value.waitingList) { waitingList ->
+            WaitingItem(
+                name = waitingList.name,
+                onClick = {
+                    viewModel.acceptAdmin(waitingList.userId, waitingList.name)
+                }
+            )
+        }
     }
 }
 
 @Composable
-fun WaitingItem(name: String) {
+fun WaitingItem(
+    name: String,
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,8 +61,8 @@ fun WaitingItem(name: String) {
         )
         ShortButton(
             text = "승인",
-            isSelected = true,
-            onClick = {}
+            isSelected = false,
+            onClick = onClick
         )
     }
 }
