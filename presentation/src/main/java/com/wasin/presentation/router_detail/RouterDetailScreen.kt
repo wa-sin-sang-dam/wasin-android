@@ -2,56 +2,109 @@ package com.wasin.presentation.router_detail
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.wasin.data.model.router.FindByRouterIdResponse
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.typography
+import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation.setting.SettingContentTheme
 import com.wasin.presentation.setting.WithArrowItem
+import kotlin.math.roundToInt
 
 @Composable
 fun RouterDetailScreen(
-    navController: NavController
+    routerId: Long,
+    navController: NavController,
+    viewModel: RouterDetailViewModel = hiltViewModel()
 ) {
-    WithTitle("휴게실 Wifi") {
+    LaunchedEffectEvent(
+        eventFlow = viewModel.eventFlow,
+        onNavigate = { navController.navigate(WasinScreen.RouterListScreen.route) }
+    )
+    WithTitle(
+        title = viewModel.routerDTO.value.information.name
+    ) {
         item {
-            Box (
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CompanyImageItem()
-                ImageMarker(Modifier.offset(90.dp, 10.dp))
-            }
+            CompanyAndRouter(
+                image = viewModel.routerDTO.value.image.companyImage,
+                information = viewModel.routerDTO.value.information,
+                enterImageSize = { viewModel.enterImageSize(it) }
+            )
         }
-        item { RouterState() }
+        item { RouterState(viewModel.routerDTO.value.information) }
         item { RouterMonitoring() }
         item { SystemRestore() }
         item {
             Editing(
-                onUpdateClick = { navController.navigate(WasinScreen.RouterUpdateScreen.route) },
-                onDeleteClick = { }
+                onUpdateClick = { navController.navigate(WasinScreen.RouterUpdateScreen.route + "?routerId=${routerId}") },
+                onDeleteClick = { viewModel.deleteRouter() }
             )
         }
     }
 }
 
 @Composable
-fun RouterState() {
+fun CompanyAndRouter(
+    image: String,
+    information: FindByRouterIdResponse.RouterInformation,
+    enterImageSize: (Int) -> Unit
+) {
+    var localWidth by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(true) {
+        enterImageSize(localWidth)
+    }
+
+    Box (
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        CompanyImageItem(
+            modifier = Modifier
+                .onGloballyPositioned {
+                    localWidth = it.size.width
+                }
+            ,
+            imageUrl = image
+        )
+        ImageMarker(
+            Modifier.absoluteOffset {
+                IntOffset(information.positionX.roundToInt(), information.positionY.roundToInt())
+            }
+        )
+    }
+}
+
+@Composable
+fun RouterState(
+    information: FindByRouterIdResponse.RouterInformation,
+) {
     SettingContentTheme(
         title = "상태 확인"
     ) {
-        RouterStateItem("이름", "휴게실 Wifi")
-        RouterStateItem("MAC 주소", "88:22:99:00:02:1A")
-        RouterStateItem("상태", "97점")
+        RouterStateItem("이름", information.name)
+        RouterStateItem("SSID", information.ssid)
+        RouterStateItem("IP주소", information.instance)
+        RouterStateItem("MAC 주소", information.macAddress)
+        RouterStateItem("상태", information.state)
     }
 }
 

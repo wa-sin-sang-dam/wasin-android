@@ -1,7 +1,11 @@
 package com.wasin.presentation._common
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -25,16 +29,19 @@ fun CompanyImageItem(
     contentDescription: String = "",
     colorFilter: ColorFilter? = ColorFilter.tint(gray_A1A1A1.copy(0.3f), blendMode = BlendMode.Darken)
 ) {
-    AsyncImage(
-        modifier = modifier.fillMaxWidth(),
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl)
-            .crossfade(true)
-            .build(),
-        contentDescription = contentDescription,
-        contentScale = ContentScale.Crop,
-        colorFilter = colorFilter
-    )
+    Column {
+        Spacer(Modifier.height(20.dp))
+        AsyncImage(
+            modifier = modifier.fillMaxWidth(),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = contentDescription,
+            contentScale = ContentScale.Crop,
+            colorFilter = colorFilter
+        )
+    }
 }
 
 @Composable
@@ -43,7 +50,9 @@ fun ImageMarker(
     onClick: () -> Unit = {}
 ) {
     Icon(
-        modifier = modifier.size(40.dp).clickable(onClick = onClick),
+        modifier = modifier.offset(-20.dp, -20.dp)
+            .size(40.dp)
+            .clickable(onClick = onClick),
         imageVector = Icons.Filled.LocationOn,
         contentDescription = "화살표 그림(이동하기)",
         tint = main_green,
