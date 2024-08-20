@@ -6,15 +6,18 @@ import com.wasin.data._const.DataStoreKey
 import com.wasin.data._const.HttpRoutes
 import com.wasin.data.api.BackOfficeApi
 import com.wasin.data.api.CompanyApi
+import com.wasin.data.api.RouterApi
 import com.wasin.data.api.UserApi
 import com.wasin.data.data_api.BackOfficeRepository
 import com.wasin.data.data_api.CompanyRepository
+import com.wasin.data.data_api.RouterRepository
 import com.wasin.data.data_api.UserRepository
 import com.wasin.data.datastore.WasinDataStore
 import com.wasin.data.model.user.ReissueRequest
 import com.wasin.data.model.user.ReissueResponse
 import com.wasin.data.repository.BackOfficeRepositoryImpl
 import com.wasin.data.repository.CompanyRepositoryImpl
+import com.wasin.data.repository.RouterRepositoryImpl
 import com.wasin.data.repository.UserRepositoryImpl
 import com.wasin.data.util.ApiUtils
 import dagger.Module
@@ -179,6 +182,17 @@ class NetworkModule {
     @Singleton
     fun provideBackOfficeRepositoryImpl(backOfficeApi: BackOfficeApi): BackOfficeRepositoryImpl {
         return BackOfficeRepositoryImpl(backOfficeApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRouterApi(client: HttpClient): RouterRepository {
+        return RouterApi(client)
+    }
+    @Provides
+    @Singleton
+    fun provideRouterRepositoryImpl(routerApi: RouterApi): RouterRepositoryImpl {
+        return RouterRepositoryImpl(routerApi)
     }
 
 }
