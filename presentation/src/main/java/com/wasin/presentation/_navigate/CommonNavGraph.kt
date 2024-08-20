@@ -59,7 +59,12 @@ fun NavGraphBuilder.commonAdminNavGraph(
                 defaultValue = -1L
             },
         ),
-        content = { RouterDetailScreen(navController) }
+        content = {
+            RouterDetailScreen(
+                routerId = it.arguments?.getLong("routerId") ?: -1,
+                navController = navController
+            )
+        }
     )
     composable(
         route = WasinScreen.RouterUpdateScreen.route + "?routerId={routerId}",
