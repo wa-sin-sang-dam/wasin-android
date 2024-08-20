@@ -7,12 +7,14 @@ import com.wasin.presentation._common.LockComponent
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._util.LaunchedEffectEvent
+import com.wasin.presentation._util.WasinBackHandler
 
 @Composable
 fun LockSettingScreen(
     navController: NavController,
     viewModel: LockSettingViewModel = hiltViewModel(),
 ) {
+    WasinBackHandler()
     LaunchedEffectEvent(
         eventFlow = viewModel.eventFlow,
         onNavigate = {

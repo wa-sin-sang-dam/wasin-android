@@ -52,6 +52,7 @@ import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.FileUtil
 import com.wasin.presentation._util.LaunchedEffectEvent
+import com.wasin.presentation._util.WasinBackHandler
 import java.io.File
 
 @Composable
@@ -70,6 +71,7 @@ fun CompanySuperAdminScreen(
             onDismissRequest = { isDialogOpen.value = false }
         )
     }
+    WasinBackHandler()
     LaunchedEffectEvent(
         eventFlow = viewModel.eventFlow,
         onNavigate = {

@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation.R
+import com.wasin.presentation._util.WasinBackHandler
 import kotlinx.coroutines.delay
 
 @Composable
@@ -20,6 +21,7 @@ fun SplashScreen(
     navController: NavController,
     viewModel: SplashViewModel = hiltViewModel()
 ) {
+    WasinBackHandler()
     LaunchedEffect(key1 = true){
         delay(500)
         navController.popBackStack()

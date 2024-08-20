@@ -22,12 +22,14 @@ import com.wasin.presentation._theme.gray_979797
 import com.wasin.presentation._theme.main_blue
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.LaunchedEffectEvent
+import com.wasin.presentation._util.WasinBackHandler
 
 @Composable
 fun CompanyAdminScreen(
     navController: NavController,
     viewModel: CompanyAdminViewModel = hiltViewModel(),
 ) {
+    WasinBackHandler()
     LaunchedEffectEvent(
         eventFlow = viewModel.eventFlow,
         onNavigate = {
