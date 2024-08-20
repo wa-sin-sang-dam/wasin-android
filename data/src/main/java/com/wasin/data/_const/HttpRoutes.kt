@@ -31,6 +31,8 @@ enum class HttpRoutes(
     // router
     ROUTER("router"),
     ROUTER_MONITORING("router/monitoring"),
+    GET_COMPANY_IMAGE("router/image"),
+    DELETE_ROUTER("router/delete"),
 
     // profile
     GET_PROFILE("profile"),
