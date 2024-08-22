@@ -12,6 +12,7 @@ val light_red = Color(0xFFFEF2F2)
 val light_blue = Color(0xFFECF2FF)
 
 val gray_C9C9C9 = Color(0xFFC9C9C9)
+val gray_B8B8B8 = Color(0xFFB8B8B8)
 val gray_808080 = Color(0xFF808080)
 val gray_E8E8E8 = Color(0xFFE8E8E8)
 val gray_979797 = Color(0xFF979797)
