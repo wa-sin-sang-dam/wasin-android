@@ -6,10 +6,12 @@ import com.wasin.data._const.DataStoreKey
 import com.wasin.data._const.HttpRoutes
 import com.wasin.data.api.BackOfficeApi
 import com.wasin.data.api.CompanyApi
+import com.wasin.data.api.ProfileApi
 import com.wasin.data.api.RouterApi
 import com.wasin.data.api.UserApi
 import com.wasin.data.data_api.BackOfficeRepository
 import com.wasin.data.data_api.CompanyRepository
+import com.wasin.data.data_api.ProfileRepository
 import com.wasin.data.data_api.RouterRepository
 import com.wasin.data.data_api.UserRepository
 import com.wasin.data.datastore.WasinDataStore
@@ -17,6 +19,7 @@ import com.wasin.data.model.user.ReissueRequest
 import com.wasin.data.model.user.ReissueResponse
 import com.wasin.data.repository.BackOfficeRepositoryImpl
 import com.wasin.data.repository.CompanyRepositoryImpl
+import com.wasin.data.repository.ProfileRepositoryImpl
 import com.wasin.data.repository.RouterRepositoryImpl
 import com.wasin.data.repository.UserRepositoryImpl
 import com.wasin.data.util.ApiUtils
@@ -194,5 +197,18 @@ class NetworkModule {
     fun provideRouterRepositoryImpl(routerApi: RouterApi): RouterRepositoryImpl {
         return RouterRepositoryImpl(routerApi)
     }
+
+    @Provides
+    @Singleton
+    fun provideProfileApi(client: HttpClient): ProfileRepository {
+        return ProfileApi(client)
+    }
+    @Provides
+    @Singleton
+    fun provideProfileRepositoryImpl(profileApi: ProfileApi): ProfileRepositoryImpl {
+        return ProfileRepositoryImpl(profileApi)
+    }
+
+
 
 }
