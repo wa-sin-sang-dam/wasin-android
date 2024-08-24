@@ -57,7 +57,10 @@ class LoginViewModel @Inject constructor(
                 when(response){
                     is Resource.Loading -> _eventFlow.emit(WasinEvent.Loading)
                     is Resource.Error -> _eventFlow.emit(WasinEvent.MakeToast(response.message))
-                    is Resource.Success -> _eventFlow.emit(WasinEvent.Navigate)
+                    is Resource.Success -> {
+                        dataStore.setData(DataStoreKey.EMAIL_KEY.name, loginDTO.value.email)
+                        _eventFlow.emit(WasinEvent.Navigate)
+                    }
                 }
             }
         }

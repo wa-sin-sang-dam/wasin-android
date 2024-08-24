@@ -12,30 +12,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation.R
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._common.noRippleClickable
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_A1A1A1
 import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
+import com.wasin.presentation._util.LaunchedEffectEvent
 
 @Composable
-fun SettingScreen(navController: NavController) {
+fun SettingScreen(
+    navController: NavController,
+    viewModel: SettingViewModel = hiltViewModel()
+) {
+    LaunchedEffectEvent(
+        eventFlow = viewModel.eventFlow,
+        onNavigate = { navController.navigate(WasinScreen.LoginScreen.route) }
+    )
     WithTitle (
         title = "설정"
     ) {
-        item { SettingUserInfo(email = "qwer1234@kakao.com") }
+        item { SettingUserInfo(email = viewModel.email.value) }
         item { SettingService(version = "v1.0.0") }
         item {
             SettingMyPage(
-                onLogOutClick = { },
-                onWithdrawClick = { }
+                onLogOutClick = { viewModel.logout() },
+                onWithdrawClick = { viewModel.withdraw() }
             )
         }
         item { SettingExtra() }
@@ -53,14 +64,15 @@ private fun SettingUserInfo(email: String = "") {
 
 @Composable
 private fun SettingService(version: String = "") {
+    val urlHandler = LocalUriHandler.current
     SettingContentTheme("서비스"){
         WithArrowItem(
             text = "공지 사항",
-            onClick = {  }
+            onClick = { urlHandler.openUri(NotionLink.NOTICE.link) }
         )
         WithArrowItem(
             text = "FAQ",
-            onClick = {  }
+            onClick = { urlHandler.openUri(NotionLink.FAQ.link) }
         )
         SettingVersion(version)
     }
@@ -85,21 +97,22 @@ private fun SettingMyPage(
 
 @Composable
 private fun SettingExtra() {
+    val urlHandler = LocalUriHandler.current
     SettingContentTheme(
         title = "기타",
         isLast = true,
     ){
         WithArrowItem(
             text = "개인 정보 처리 방침",
-            onClick = { }
+            onClick = { urlHandler.openUri(NotionLink.PERSONAL.link) }
         )
         WithArrowItem(
             text = "서비스 약관",
-            onClick = { }
+            onClick = { urlHandler.openUri(NotionLink.SERVICE.link) }
         )
         WithArrowItem(
             text = "오픈 소스 라이브러리",
-            onClick = { }
+            onClick = { urlHandler.openUri(NotionLink.OPEN_SOURCE.link) }
         )
     }
 }
