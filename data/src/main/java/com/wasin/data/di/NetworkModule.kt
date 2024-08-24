@@ -92,8 +92,8 @@ class NetworkModule {
                         val refreshToken = WasinDataStore(context).getData(refreshKey)
                         if (accessToken.isNotEmpty()) {
                             BearerTokens(
-                                accessToken = accessToken,
-                                refreshToken = refreshToken
+                                accessToken = accessToken.parseToken(),
+                                refreshToken = refreshToken.parseToken()
                             )
                         } else null
                     }
