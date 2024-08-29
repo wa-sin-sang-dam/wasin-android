@@ -33,7 +33,7 @@ fun LockConfirmScreen(
         }
     )
     Column(
-        modifier = Modifier.padding(top = 50.dp),
+        modifier = Modifier.padding(top = 90.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
