@@ -127,7 +127,7 @@ fun CompanyDialog(
     Dialog(onDismissRequest) {
         Column (
             modifier = Modifier
-                .fillMaxHeight(0.5f)
+                .fillMaxHeight(0.8f)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(30.dp))
                 .background(Color.White)

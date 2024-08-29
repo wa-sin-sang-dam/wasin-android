@@ -61,7 +61,7 @@ fun WaitingItem(
         )
         ShortButton(
             text = "승인",
-            isSelected = false,
+            isSelected = true,
             onClick = onClick
         )
     }

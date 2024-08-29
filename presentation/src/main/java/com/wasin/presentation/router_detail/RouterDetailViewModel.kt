@@ -71,10 +71,13 @@ class RouterDetailViewModel @Inject constructor (
         _routerDTO.value = _routerDTO.value.copy(
             information = FindByRouterIdResponse.RouterInformation(
                 name = router.name,
-                state = router.state,
+                score = router.score,
                 ssid = router.ssid,
                 macAddress = router.macAddress,
                 instance = router.instance,
+                serialNumber = router.serialNumber,
+                port = router.port,
+                password = router.password,
                 positionX = position?.x ?: -1.0,
                 positionY = position?.y ?: -1.0,
             )

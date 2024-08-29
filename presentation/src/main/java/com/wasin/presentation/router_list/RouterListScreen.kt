@@ -1,12 +1,15 @@
 package com.wasin.presentation.router_list
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.items
@@ -21,7 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,8 +38,10 @@ import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
+import com.wasin.presentation._theme.getScoreColor
 import com.wasin.presentation._theme.gray_E8E8E8
-import com.wasin.presentation._theme.main_green
+import com.wasin.presentation._theme.main_orange
+import com.wasin.presentation._theme.scoreColor
 import com.wasin.presentation._theme.typography
 import kotlin.math.roundToInt
 
@@ -55,6 +63,7 @@ fun RouterListScreen(
                 onClick = { navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=${it}") }
             )
         }
+        item { NetworkStateMessage() }
         item {
             BlueLongButton(
                 text = "라우터 추가",
@@ -71,10 +80,64 @@ fun RouterListScreen(
         items(viewModel.routerListDTO.value.routerList) {
             RouterItemComponent(
                 name = it.name,
-                state = it.state,
+                score = it.score,
                 onClick = { navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=${it.routerId}") }
             )
         }
+    }
+}
+
+@Composable
+fun NetworkStateMessage() {
+    Column (
+        modifier = Modifier.fillMaxWidth()
+            .border(BorderStroke(1.dp, gray_E8E8E8), RoundedCornerShape(30.dp))
+            .padding(vertical = 20.dp)
+    ) {
+        Text(
+            text = "라우터 상태에 따라 원활할 경우 초록색, \n" +
+                    "불안정할 경우 빨간색, \n" +
+                    "고장일 경우 검은색으로 나타나요. ",
+            style = typography.bodyLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Box(
+            modifier = Modifier
+                .padding(vertical = 20.dp)
+                .height(20.dp)
+                .fillMaxWidth()
+                .background(Brush.horizontalGradient(scoreColor))
+        )
+        ScoreDescription()
+    }
+}
+
+@Composable
+private fun ScoreDescription() {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 5.dp)
+    ) {
+        Text(
+            text = "혼잡",
+            style = typography.bodyLarge,
+            color = Color.Red,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = "보통",
+            style = typography.bodyLarge,
+            color = main_orange,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = "쾌적",
+            style = typography.bodyLarge,
+            color = Color.Green,
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.End
+        )
     }
 }
 
@@ -106,7 +169,8 @@ fun CompanyImageComponent(
                 modifier = Modifier.absoluteOffset {
                     IntOffset(it.positionX.roundToInt(), it.positionY.roundToInt())
                 },
-                onClick = { onClick(it.routerId) }
+                color = getScoreColor(it.score),
+                onClick = { onClick(it.routerId) },
             )
         }
     }
@@ -116,7 +180,7 @@ fun CompanyImageComponent(
 @Composable
 fun RouterItemComponent(
     name: String = "휴게소 Wifi ",
-    state: String = "",
+    score: Long = 0L,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -135,9 +199,9 @@ fun RouterItemComponent(
             style = typography.titleMedium,
         )
         Text(
-            text = state,
+            text = "$score 점",
             style = typography.titleMedium,
-            color = main_green
+            color = getScoreColor(score)
         )
     }
 }
