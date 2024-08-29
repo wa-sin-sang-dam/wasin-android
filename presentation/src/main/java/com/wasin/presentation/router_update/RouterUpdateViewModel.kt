@@ -56,6 +56,11 @@ class RouterUpdateViewModel @Inject constructor(
                     name = event.name
                 )
             }
+            is RouterUpdateEvent.EnterPassword -> {
+                _requestDTO.value = _requestDTO.value.copy(
+                    password = event.password
+                )
+            }
             is RouterUpdateEvent.EnterPosition -> {
                 _position.value = RouterPosition(event.x.toDouble(), event.y.toDouble())
             }
@@ -83,6 +88,10 @@ class RouterUpdateViewModel @Inject constructor(
 
     private fun updateRouter() {
         viewModelScope.launch {
+            if (isInvalid()) {
+                _eventFlow.emit(WasinEvent.MakeToast("입력 내용은 비어있으면 안됩니다."))
+                return@launch
+            }
             updateRouterUseCase(requestDTO.value, _routerId.longValue).collect { response ->
                 when (response) {
                     is Resource.Error -> _eventFlow.emit(WasinEvent.MakeToast(response.message))
@@ -117,7 +126,8 @@ class RouterUpdateViewModel @Inject constructor(
             localImageWidth = _imageWidth.value
         )
         _requestDTO.value = _requestDTO.value.copy(
-            name = routerDTO.value.information.name
+            name = routerDTO.value.information.name,
+            password = routerDTO.value.information.password
         )
         _position.value = RouterPosition(
             x = position?.x ?: -1.0,
@@ -132,5 +142,7 @@ class RouterUpdateViewModel @Inject constructor(
             localImageWidth =_imageWidth.value
         )
     }
+
+    private fun isInvalid() = requestDTO.value.name.isEmpty() || requestDTO.value.password.isEmpty()
 
 }

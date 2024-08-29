@@ -104,7 +104,10 @@ fun RouterState(
         RouterStateItem("SSID", information.ssid)
         RouterStateItem("IP주소", information.instance)
         RouterStateItem("MAC 주소", information.macAddress)
-        RouterStateItem("상태", information.state)
+        RouterStateItem("시리얼 넘버", information.serialNumber)
+        RouterStateItem("포트번호", information.port)
+        RouterStateItem("비밀번호", information.password)
+        RouterStateItem("상태", "${information.score}점")
     }
 }
 

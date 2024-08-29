@@ -58,6 +58,30 @@ fun RouterAddScreen(
             )
         }
         item {
+            TextFieldWithTitle(
+                title = "시리얼 넘버",
+                placeholder = "ex) IPT-98765432",
+                text = viewModel.routerDTO.value.serialNumber,
+                onValueChange = { viewModel.onEvent(RouterAddEvent.EnterSerialNumber(it)) }
+            )
+        }
+        item {
+            TextFieldWithTitle(
+                title = "패스워드",
+                placeholder = "라우터의 패스워드를 입력해주세요.",
+                text = viewModel.routerDTO.value.password,
+                onValueChange = { viewModel.onEvent(RouterAddEvent.EnterPassword(it)) }
+            )
+        }
+        item {
+            TextFieldWithTitle(
+                title = "포트번호",
+                placeholder = "ex) 1234",
+                text = viewModel.routerDTO.value.port,
+                onValueChange = { viewModel.onEvent(RouterAddEvent.EnterPort(it)) }
+            )
+        }
+        item {
             RouterPositionInImage(
                 image = viewModel.imageDTO.value.companyImage,
                 position = viewModel.position.value,

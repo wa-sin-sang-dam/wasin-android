@@ -54,6 +54,21 @@ class RouterAddViewModel @Inject constructor(
                     name = event.name
                 )
             }
+            is RouterAddEvent.EnterSerialNumber -> {
+                _routerDTO.value = _routerDTO.value.copy(
+                    serialNumber = event.serialNumber
+                )
+            }
+            is RouterAddEvent.EnterPassword -> {
+                _routerDTO.value = _routerDTO.value.copy(
+                    password = event.password
+                )
+            }
+            is RouterAddEvent.EnterPort -> {
+                _routerDTO.value = _routerDTO.value.copy(
+                    port = event.port
+                )
+            }
             is RouterAddEvent.EnterPosition -> {
                 _position.value = RouterPosition(event.x.toDouble(), event.y.toDouble())
             }
@@ -116,5 +131,6 @@ class RouterAddViewModel @Inject constructor(
     }
 
     private fun isInvalid() = routerDTO.value.name.isEmpty() || routerDTO.value.macAddress.isEmpty()
+            || routerDTO.value.serialNumber.isEmpty() || routerDTO.value.password.isEmpty() || routerDTO.value.port.isEmpty()
 
 }

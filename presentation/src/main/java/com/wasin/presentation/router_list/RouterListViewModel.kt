@@ -64,7 +64,7 @@ class RouterListViewModel @Inject constructor(
                 FindAllRouterResponse.EachRouter(
                     routerId = it.routerId,
                     name = it.name,
-                    state = it.state,
+                    score = it.score,
                     positionX = position?.x ?: -1.0,
                     positionY = position?.y ?: -1.0
                 )

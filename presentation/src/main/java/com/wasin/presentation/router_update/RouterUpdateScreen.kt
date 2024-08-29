@@ -29,6 +29,14 @@ fun RouterUpdateScreen(
             )
         }
         item {
+            TextFieldWithTitle(
+                title = "패스워드",
+                placeholder = "라우터의 패스워드를 입력해주세요.",
+                text = viewModel.requestDTO.value.password,
+                onValueChange = { viewModel.onEvent(RouterUpdateEvent.EnterPassword(it)) }
+            )
+        }
+        item {
             RouterPositionInImage(
                 image = viewModel.routerDTO.value.image.companyImage,
                 position = viewModel.position.value,
