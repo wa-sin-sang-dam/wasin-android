@@ -18,7 +18,7 @@ data class FindAllRouterResponse(
     data class EachRouter(
         val routerId: Long = 0,
         val name: String = "",
-        val state: String = "",
+        val score: Long = 0L,
         val positionX: Double = 0.0,
         val positionY: Double = 0.0
     )

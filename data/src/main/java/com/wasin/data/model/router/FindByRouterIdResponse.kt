@@ -20,7 +20,10 @@ data class FindByRouterIdResponse(
         val ssid: String = "",
         val macAddress: String = "",
         val instance: String = "",
-        val state: String = "",
+        val serialNumber: String = "",
+        val password: String = "",
+        val port: String = "",
+        val score: Long = 0,
         val positionX: Double = 0.0,
         val positionY: Double = 0.0,
     )
