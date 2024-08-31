@@ -39,6 +39,13 @@ enum class HttpRoutes(
     PROFILE_MODE_AUTO_CHANGE("profile/mode/auto"),
     PROFILE_MODE_MANUAL_CHANGE("profile/mode/manual"),
     UPDATE_PROFILE("profile"),
+
+    // hand off
+    GET_HAND_OFF_ALL("hand-off"),
+    GET_HAND_OFF_BEST("hand-off/best"),
+    CHANGE_MODE_AUTO("hand-off/mode/auto"),
+    CHANGE_MODE_MANUAL("hand-off/mode/manual"),
+
     ;
 
     fun getPath1(): String {
