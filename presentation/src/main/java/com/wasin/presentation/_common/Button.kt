@@ -10,10 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -82,21 +78,17 @@ fun ShortButton(
     onClick: () -> Unit,
     isSelected: Boolean = false
 ) {
-    var selected by remember { mutableStateOf(isSelected) }
     DefaultButton(
         text = text,
         modifier = modifier.wrapContentWidth(),
-        color = if(selected) main_blue else Color.White,
-        textColor = if(selected) Color.White else Color.Black,
-        border = if(selected) null else BorderStroke(1.dp, gray_C9C9C9),
+        color = if(isSelected) main_blue else Color.White,
+        textColor = if(isSelected) Color.White else Color.Black,
+        border = if(isSelected) null else BorderStroke(1.dp, gray_C9C9C9),
         shape = RoundedCornerShape(30.dp),
         style = typography.titleSmall,
         horizontalPadding = 20.dp,
         verticalPadding = 5.dp,
-        onClick = {
-            onClick()
-            selected = !selected
-        },
+        onClick = onClick,
     )
 }
 
