@@ -1,6 +1,9 @@
 package com.wasin.presentation.wifi_list
 
+import android.os.Build
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,38 +19,72 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.wasin.presentation.R
+import com.wasin.data.model.handoff.FindAllHandOffResponse
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.ShortButton
+import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_C9C9C9
-import com.wasin.presentation._theme.main_pink
 import com.wasin.presentation._theme.typography
+import com.wasin.presentation._util.LaunchedEffectEvent
+import com.wasin.presentation._util.getWifi
+import com.wasin.presentation._util.log
 
 @Composable
-fun WifiScreen(navController: NavController) {
+fun WifiScreen(
+    navController: NavController,
+    viewModel: WifiViewModel = hiltViewModel(),
+) {
+    LaunchedEffectEvent(viewModel.eventFlow)
     WithTitle(
         title = "Wifi 연결",
         description = "자동 또는 수동으로 최적의 와이파이에 연결되도록 설정할 수 있어요.",
         containSetting = true,
         onSettingClick = { navController.navigate(WasinScreen.SettingScreen.route) }
     ) {
-        item { WifiAutoMode() }
+        item {
+            WifiAutoMode(
+                isAuto = viewModel.wifiList.value.isAuto,
+                changeModeManual = { viewModel.changeHandOffModeManual() },
+                changeModeAuto = { viewModel.changeHandOffModeAuto() }
+            )
+        }
         item { GrayDivider() }
-        item { WifiListComponent() }
+        item {
+            WifiListComponent(
+                currentSSID = viewModel.currentSSID.value,
+                password = { viewModel.getPassword(it) },
+                wifiList = viewModel.wifiList.value.routerList,
+                openWifiSetting = { viewModel.openWifiSettings() },
+                connectWifi = { a, b -> viewModel.connectInReal(a, b) },
+            )
+        }
     }
 }
 
 @Composable
-fun WifiListComponent() {
+fun WifiListComponent(
+    currentSSID: String = "",
+    password: (String) -> String,
+    wifiList: List<FindAllHandOffResponse.RouterWithStateDTO>,
+    openWifiSetting: () -> Unit,
+    connectWifi: (String, String) -> Unit
+) {
     Column {
         WifiListTitle()
         Box(
@@ -64,23 +101,39 @@ fun WifiListComponent() {
                 Modifier.align(Alignment.CenterEnd)
             )
         }
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
-        WifiItemComponent()
+        wifiList.forEach {
+            WifiItemComponent(
+                ssid = it.ssid,
+                level = it.level.toInt(),
+                score = it.score.toInt(),
+                password = it.password.ifEmpty { password(it.ssid) },
+                isCurrentConnect = it.ssid == currentSSID,
+                connectWifi = connectWifi,
+                openWifiSetting = openWifiSetting
+            )
+        }
     }
 }
 
 @Composable
 fun WifiItemComponent(
-    name: String = "휴게실 와이파이",
-    state: String = "상태: 보통"
+    ssid: String = "휴게실 와이파이",
+    level: Int = 0,
+    score: Int = 0,
+    password: String = "",
+    isCurrentConnect: Boolean = false,
+    connectWifi: (String, String) -> Unit,
+    openWifiSetting: () -> Unit,
 ) {
+    val isDialogOpen = remember { mutableStateOf(false) }
+    if (isDialogOpen.value) {
+        WifiPasswordDialog(
+            ssid = ssid,
+            connectWifi = connectWifi,
+            password = password,
+            onDismissRequest = { isDialogOpen.value = false }
+        )
+    }
     Column(
         modifier = Modifier.padding(top = 20.dp)
     ) {
@@ -89,12 +142,20 @@ fun WifiItemComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                WifiWithIcon(name, state)
+                WifiWithIcon(ssid, level, score)
             }
             ShortButton(
                 text = "연결",
-                isSelected = true,
-                onClick = { },
+                isSelected = !isCurrentConnect,
+                onClick = {
+                    if (isCurrentConnect) {
+                        // do nothing
+                    }
+                    else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        isDialogOpen.value = true
+                    }
+                    else openWifiSetting()
+                },
             )
         }
         GrayDivider(modifier = Modifier.padding(top = 17.dp))
@@ -102,14 +163,57 @@ fun WifiItemComponent(
 }
 
 @Composable
-private fun WifiWithIcon(name: String, state: String) {
+fun WifiPasswordDialog(
+    ssid: String = "",
+    password: String = "",
+    connectWifi: (String, String) -> Unit,
+    onDismissRequest: () -> Unit = {}
+) {
+    val text = remember { mutableStateOf(password) }
+    Dialog(onDismissRequest) {
+        Column (
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(30.dp))
+                .background(Color.White)
+                .padding(30.dp)
+        ) {
+            Text(
+                text = ssid,
+                style = typography.titleLarge,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+                    .padding(bottom = 45.dp)
+            )
+            TextFieldWithTitle(
+                title = "비밀번호",
+                text = text.value,
+                placeholder = "비밀번호를 입력해주세요",
+                onValueChange = { text.value = it },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+            ShortButton(
+                text = "연결",
+                isSelected = true,
+                onClick = {
+                    connectWifi(ssid, text.value)
+                    onDismissRequest()
+                },
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
+    }
+}
+
+@Composable
+private fun WifiWithIcon(name: String, level: Int, score: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.wifi),
-            tint = main_pink,
-            contentDescription = "toggle filtering list",
+        Image(
+            painter = painterResource(id = getWifi(level)),
+            contentDescription = "wifi level",
             modifier = Modifier
                 .padding(end = 15.dp)
                 .width(30.dp)
@@ -121,7 +225,7 @@ private fun WifiWithIcon(name: String, state: String) {
                 modifier = Modifier.padding(bottom = 7.dp)
             )
             Text(
-                text = state,
+                text = "상태: ${score}점",
                 style = typography.bodyMedium,
                 color = gray_808080
             )
@@ -168,7 +272,11 @@ private fun WifiListTitle() {
 }
 
 @Composable
-fun WifiAutoMode() {
+fun WifiAutoMode(
+    isAuto: Boolean,
+    changeModeManual: () -> Unit,
+    changeModeAuto: () -> Unit,
+) {
     Column {
         Text(
             text = "모드",
@@ -180,13 +288,13 @@ fun WifiAutoMode() {
         ) {
             ShortButton(
                 text = "자동",
-                onClick = { /*TODO*/ },
-                isSelected = false
+                onClick = changeModeAuto,
+                isSelected = isAuto
             )
             ShortButton(
                 text = "수동",
-                onClick = { /*TODO*/ },
-                isSelected = true
+                onClick = changeModeManual,
+                isSelected = !isAuto
             )
         }
     }
