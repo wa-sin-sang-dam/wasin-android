@@ -6,11 +6,13 @@ import com.wasin.data._const.DataStoreKey
 import com.wasin.data._const.HttpRoutes
 import com.wasin.data.api.BackOfficeApi
 import com.wasin.data.api.CompanyApi
+import com.wasin.data.api.HandOffApi
 import com.wasin.data.api.ProfileApi
 import com.wasin.data.api.RouterApi
 import com.wasin.data.api.UserApi
 import com.wasin.data.data_api.BackOfficeRepository
 import com.wasin.data.data_api.CompanyRepository
+import com.wasin.data.data_api.HandOffRepository
 import com.wasin.data.data_api.ProfileRepository
 import com.wasin.data.data_api.RouterRepository
 import com.wasin.data.data_api.UserRepository
@@ -19,6 +21,7 @@ import com.wasin.data.model.user.ReissueRequest
 import com.wasin.data.model.user.ReissueResponse
 import com.wasin.data.repository.BackOfficeRepositoryImpl
 import com.wasin.data.repository.CompanyRepositoryImpl
+import com.wasin.data.repository.HandOffRepositoryImpl
 import com.wasin.data.repository.ProfileRepositoryImpl
 import com.wasin.data.repository.RouterRepositoryImpl
 import com.wasin.data.repository.UserRepositoryImpl
@@ -209,6 +212,15 @@ class NetworkModule {
         return ProfileRepositoryImpl(profileApi)
     }
 
-
+    @Provides
+    @Singleton
+    fun provideHandOffApi(client: HttpClient): HandOffRepository {
+        return HandOffApi(client)
+    }
+    @Provides
+    @Singleton
+    fun provideHandOffRepositoryImpl(handOffApi: HandOffApi): HandOffRepositoryImpl {
+        return HandOffRepositoryImpl(handOffApi)
+    }
 
 }

@@ -43,6 +43,7 @@ import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.main_orange
 import com.wasin.presentation._theme.scoreColor
 import com.wasin.presentation._theme.typography
+import com.wasin.presentation._util.LaunchedEffectEvent
 import kotlin.math.roundToInt
 
 @Composable
@@ -50,6 +51,8 @@ fun RouterListScreen(
     navController: NavController,
     viewModel: RouterListViewModel = hiltViewModel()
 ) {
+    LaunchedEffectEvent(viewModel.eventFlow)
+
     WithTitle(
         title = "라우터 관리",
         description = "라우터 상태에 따라 원활할 경우 초록색, 불안정할 경우 빨간색으로 나타나요. \n" +
