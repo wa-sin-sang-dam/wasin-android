@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FindBestHandOffRequest (
-    val router: List<RouterDTO>
+    val router: List<RouterDTO> = emptyList()
 ) {
     @Serializable
     data class RouterDTO(
