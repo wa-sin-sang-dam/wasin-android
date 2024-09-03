@@ -43,7 +43,6 @@ import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation._util.getWifi
-import com.wasin.presentation._util.log
 
 @Composable
 fun WifiScreen(

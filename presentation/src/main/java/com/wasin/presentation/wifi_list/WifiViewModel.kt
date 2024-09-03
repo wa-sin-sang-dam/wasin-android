@@ -9,11 +9,13 @@ import androidx.lifecycle.viewModelScope
 import com.wasin.data.datastore.WasinDataStore
 import com.wasin.data.model.handoff.FindAllHandOffRequest
 import com.wasin.data.model.handoff.FindAllHandOffResponse
+import com.wasin.data.model.handoff.Wifi
 import com.wasin.domain.usecase.handoff.ChangeHandOffModeAuto
 import com.wasin.domain.usecase.handoff.ChangeHandOffModeManual
 import com.wasin.domain.usecase.handoff.FindAllHandOff
 import com.wasin.domain.usecase.wifi.ConnectWifi
 import com.wasin.domain.usecase.wifi.GetWifiState
+import com.wasin.domain.usecase.wifi.WifiUseCase
 import com.wasin.domain.utils.Resource
 import com.wasin.presentation._util.WasinEvent
 import com.wasin.presentation._util.getWifiLevel
@@ -34,6 +36,7 @@ class WifiViewModel @Inject constructor(
     private val connectWifiUseCase: ConnectWifi,
     private val changeHandOffModeManualUseCase: ChangeHandOffModeManual,
     private val changeHandOffModeAutoUseCase: ChangeHandOffModeAuto,
+    private val wifiUseCase: WifiUseCase,
 ): ViewModel() {
 
     private val _wifiList = mutableStateOf(FindAllHandOffResponse())
@@ -53,7 +56,7 @@ class WifiViewModel @Inject constructor(
 
     fun getWifiList() {
         getLocalWifiList()
-        getDBWithStateWifiList()
+        makeWifiRequest()
     }
 
     fun changeHandOffModeAuto() {
@@ -135,6 +138,41 @@ class WifiViewModel @Inject constructor(
                         _currentSSID.value = response.data?.first?.removeSurrounding("\"", "\"") ?: ""
                     }
                 }
+            }
+        }
+    }
+
+    private fun makeWifiRequest() {
+        // 비어있으면 로컬 DB에서 가져오고
+        // 들어있으면 로컬 DB에 저장
+        if (wifiRequest.value.router.isEmpty()) {
+            getWifiLocalDB()
+        }
+        else {
+            saveWifiLocalDB()
+            getDBWithStateWifiList()
+        }
+    }
+
+    private fun saveWifiLocalDB() {
+        viewModelScope.launch {
+            wifiUseCase.deleteAllWifi()
+            val request = wifiRequest.value.router.map {
+                Wifi(it.ssid, it.macAddress, it.level)
+            }
+            wifiUseCase.insertAllWifi(request)
+        }
+    }
+
+    private fun getWifiLocalDB() {
+        viewModelScope.launch {
+            wifiUseCase.getWifiList().collect { wifi ->
+                wifiRequest.value = wifiRequest.value.copy(
+                    router = wifi.map {
+                        FindAllHandOffRequest.RouterDTO(it.ssid, it.macAddress, it.level)
+                    }
+                )
+                getDBWithStateWifiList()
             }
         }
     }
