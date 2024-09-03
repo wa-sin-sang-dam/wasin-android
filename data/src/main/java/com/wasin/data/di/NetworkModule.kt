@@ -1,7 +1,9 @@
 package com.wasin.data.di
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.room.Room
 import com.wasin.data._const.DataStoreKey
 import com.wasin.data._const.HttpRoutes
 import com.wasin.data.api.BackOfficeApi
@@ -16,6 +18,8 @@ import com.wasin.data.data_api.HandOffRepository
 import com.wasin.data.data_api.ProfileRepository
 import com.wasin.data.data_api.RouterRepository
 import com.wasin.data.data_api.UserRepository
+import com.wasin.data.data_db.WifiRepository
+import com.wasin.data.database.WifiDatabase
 import com.wasin.data.datastore.WasinDataStore
 import com.wasin.data.model.user.ReissueRequest
 import com.wasin.data.model.user.ReissueResponse
@@ -25,6 +29,7 @@ import com.wasin.data.repository.HandOffRepositoryImpl
 import com.wasin.data.repository.ProfileRepositoryImpl
 import com.wasin.data.repository.RouterRepositoryImpl
 import com.wasin.data.repository.UserRepositoryImpl
+import com.wasin.data.repository.WifiRepositoryImpl
 import com.wasin.data.util.ApiUtils
 import dagger.Module
 import dagger.Provides
@@ -221,6 +226,21 @@ class NetworkModule {
     @Singleton
     fun provideHandOffRepositoryImpl(handOffApi: HandOffApi): HandOffRepositoryImpl {
         return HandOffRepositoryImpl(handOffApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWifiDatabase(app: Application): WifiDatabase {
+        return Room.databaseBuilder(
+            app,
+            WifiDatabase::class.java,
+            WifiDatabase.DATABASE_NAME
+        ).build()
+    }
+    @Provides
+    @Singleton
+    fun provideWIfiRepositoryImpl(db: WifiDatabase): WifiRepository {
+        return WifiRepositoryImpl(db.wifiDao)
     }
 
 }
