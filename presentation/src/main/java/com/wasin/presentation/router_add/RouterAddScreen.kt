@@ -137,7 +137,6 @@ fun RouterPositionInImage(
                     }
                 ,
                 imageUrl = image,
-                colorFilter = null
             )
             if (position != null) {
                 ImageMarker(
