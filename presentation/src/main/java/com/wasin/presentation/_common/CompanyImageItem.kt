@@ -12,15 +12,12 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.wasin.presentation._theme.gray_A1A1A1
 import com.wasin.presentation._theme.main_green
 
 @Composable
@@ -28,7 +25,6 @@ fun CompanyImageItem(
     modifier: Modifier = Modifier,
     imageUrl: String = "https://www.knsu.ac.kr/_res/knsu/dormitory/img/facility/img-guide-map01.JPG",
     contentDescription: String = "",
-    colorFilter: ColorFilter? = ColorFilter.tint(gray_A1A1A1.copy(0.3f), blendMode = BlendMode.Darken)
 ) {
     Column {
         Spacer(Modifier.height(20.dp))
@@ -40,7 +36,6 @@ fun CompanyImageItem(
                 .build(),
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop,
-            colorFilter = colorFilter
         )
     }
 }
