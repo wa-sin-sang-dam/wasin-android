@@ -3,9 +3,11 @@ package com.wasin.presentation.monitoring
 import android.annotation.SuppressLint
 import android.text.Layout
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -70,9 +72,11 @@ import com.patrykandpatrick.vico.core.common.component.Shadow
 import com.patrykandpatrick.vico.core.common.component.ShapeComponent
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.copyColor
+import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.wasin.data.model.monitoring.FindMonitoringByIdResponse
+import com.wasin.presentation._common.FilterDropDownButton
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.metricColor
 import com.wasin.presentation._theme.gray_808080
@@ -81,6 +85,11 @@ import com.wasin.presentation._util.NoRippleInteractionSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Date
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 
 @Composable
@@ -88,13 +97,54 @@ fun MonitoringScreen(
     navController: NavController,
     viewModel: MonitoringViewModel = hiltViewModel()
 ) {
-    MonitoringTabLayer(
-        state = viewModel.monitoring.value,
-        selectedTabIndex = viewModel.selectedTabIndex.value,
-        onTabClick = { tabIndex, metricId ->
-            viewModel.onTabClick(tabIndex, metricId)
-        }
-    )
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        FilterMonitoring(
+            modifier = Modifier.align(Alignment.End),
+            routerList = viewModel.routers.value.routerList.map {
+                "${it.name} (${it.instance})"
+            },
+            router = viewModel.activeRouter.value.name,
+            time = viewModel.activeTime.value.kor,
+            routerClick = { viewModel.refreshRouter(it) },
+            timeClick = { viewModel.refreshTime(it) }
+        )
+        MonitoringTabLayer(
+            state = viewModel.monitoring.value,
+            selectedTabIndex = viewModel.selectedTabIndex.value,
+            onTabClick = { tabIndex, metricId ->
+                viewModel.onTabClick(tabIndex, metricId)
+            }
+        )
+    }
+}
+
+@Composable
+fun FilterMonitoring(
+    modifier: Modifier,
+    routerList: List<String> = emptyList(),
+    router: String,
+    time: String,
+    routerClick: (Int) -> Unit = {},
+    timeClick: (Int) -> Unit = {}
+) {
+    Row(
+        modifier = modifier.padding(top = 10.dp)
+    ) {
+        FilterDropDownButton(
+            text = router,
+            selectList = routerList,
+            onClick = routerClick,
+            color = main_blue,
+        )
+        FilterDropDownButton(
+            modifier = Modifier.padding(start = 7.dp),
+            text = time,
+            selectList = TimeEnum.entries.map { it.kor }.toList(),
+            onClick = timeClick
+        )
+    }
 }
 
 @Composable
@@ -237,6 +287,8 @@ private fun ComposeChart7(
     graph: List<FindMonitoringByIdResponse.MonitoringGraph>,
     isSamePage: Boolean
 ) {
+    val dateTimeFormatter = SimpleDateFormat("yyyy MM-dd HH:mm:ss", Locale.KOREA)
+
     if (!isSamePage) {
         // CircularProgressIndicator()
     }
@@ -268,6 +320,11 @@ private fun ComposeChart7(
                 bottomAxis = HorizontalAxis.rememberBottom(
                     guideline = null,
                     itemPlacer = HorizontalAxis.ItemPlacer.segmented(),
+                    valueFormatter = { _, value, _ ->
+                        dateTimeFormatter.format(
+                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong()))
+                        )
+                    }
                 ),
                 marker = rememberMarker(),
                 layerPadding = cartesianLayerPadding(
