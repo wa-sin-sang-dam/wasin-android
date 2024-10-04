@@ -2,6 +2,7 @@ package com.wasin.data.api
 
 import com.wasin.data._const.HttpRoutes
 import com.wasin.data.data_api.MonitoringRepository
+import com.wasin.data.model.monitoring.FindAllMonitorRouterResponse
 import com.wasin.data.model.monitoring.FindMonitoringByIdResponse
 import com.wasin.data.util.ApiUtils
 import io.ktor.client.HttpClient
@@ -17,5 +18,9 @@ class MonitoringApi (
         if (time != null) path += "&time=$time"
 
         return client.get(path).body()
+    }
+
+    override suspend fun findAllRouter(): ApiUtils.ApiResult<FindAllMonitorRouterResponse> {
+        return client.get(HttpRoutes.MONITORING_ROUTER.getPath1()).body()
     }
 }

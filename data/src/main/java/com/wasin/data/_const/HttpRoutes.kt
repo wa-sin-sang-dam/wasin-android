@@ -48,6 +48,7 @@ enum class HttpRoutes(
 
     // monitoring
     MONITORING("monitoring"),
+    MONITORING_ROUTER("monitoring/routers"),
 
     ;
 
