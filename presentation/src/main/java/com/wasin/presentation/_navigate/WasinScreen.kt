@@ -11,6 +11,7 @@ sealed class WasinScreen (val route: String){
     data object LockConfirmScreen: WasinScreen("lock_confirm_screen")
     data object LockSettingScreen: WasinScreen("lock_setting_screen")
     data object MonitoringScreen: WasinScreen("monitoring_screen")
+    data object MonitoringByRouterScreen: WasinScreen("monitoring_by_router_screen")
     data object ProfileScreen: WasinScreen("profile_screen")
     data object RouterAddScreen: WasinScreen("router_add_screen")
     data object RouterDetailScreen: WasinScreen("router_detail_screen")
