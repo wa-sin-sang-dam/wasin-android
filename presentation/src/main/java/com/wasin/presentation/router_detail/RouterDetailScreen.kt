@@ -51,7 +51,11 @@ fun RouterDetailScreen(
             )
         }
         item { RouterState(viewModel.routerDTO.value.information) }
-        item { RouterMonitoring() }
+        item {
+            RouterMonitoring{
+                navController.navigate(WasinScreen.MonitoringByRouterScreen.route + "?routerId=$routerId")
+            } 
+        }
         item { SystemRestore() }
         item {
             Editing(
@@ -130,13 +134,16 @@ fun RouterStateItem(
 }
 
 @Composable
-fun RouterMonitoring() {
+fun RouterMonitoring(
+    onClick: () -> Unit,
+) {
     SettingContentTheme(
         title = "모니터링"
     ) {
-        WithArrowItem("공유기 모니터링") {
-
-        }
+        WithArrowItem(
+            text = "공유기 모니터링",
+            onClick = onClick
+        )
     }
 }
 

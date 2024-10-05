@@ -4,7 +4,7 @@ package com.wasin.data._const
 enum class HttpRoutes(
     val path: String
 ) {
-    BASE_HOST("192.168.219.110"),
+    BASE_HOST("api.wasin.site"),
     BASE_V1_PATH("api/"),
 
     // user
@@ -45,6 +45,10 @@ enum class HttpRoutes(
     GET_HAND_OFF_BEST("hand-off/best"),
     CHANGE_MODE_AUTO("hand-off/mode/auto"),
     CHANGE_MODE_MANUAL("hand-off/mode/manual"),
+
+    // monitoring
+    MONITORING("monitoring"),
+    MONITORING_ROUTER("monitoring/routers"),
 
     ;
 

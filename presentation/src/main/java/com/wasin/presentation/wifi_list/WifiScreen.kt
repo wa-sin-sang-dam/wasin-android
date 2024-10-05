@@ -1,10 +1,8 @@
 package com.wasin.presentation.wifi_list
 
 import android.os.Build
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -33,13 +28,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.data.model.handoff.FindAllHandOffResponse
+import com.wasin.presentation._common.FilterDropDownButton
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
-import com.wasin.presentation._theme.gray_C9C9C9
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation._util.getWifi
@@ -229,31 +224,6 @@ private fun WifiWithIcon(name: String, level: Int, score: Int) {
                 color = gray_808080
             )
         }
-    }
-}
-
-@Composable
-fun FilterDropDownButton(
-    modifier: Modifier
-) {
-    Row(
-        modifier = modifier
-            .wrapContentHeight()
-            .border(BorderStroke(1.dp, gray_C9C9C9), RoundedCornerShape(30.dp))
-            .padding(vertical = 5.dp, horizontal = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.KeyboardArrowDown,
-            tint = gray_C9C9C9,
-            contentDescription = "toggle filtering list",
-            modifier = Modifier.width(30.dp)
-        )
-        Text(
-            text = "추천순",
-            style = typography.bodyMedium,
-            color = gray_C9C9C9,
-        )
     }
 }
 

@@ -28,6 +28,7 @@ sealed class BottomNavItem(
             WasinScreen.RouterDetailScreen,
             WasinScreen.RouterAddScreen,
             WasinScreen.RouterUpdateScreen,
+            WasinScreen.MonitoringByRouterScreen,
         )
     )
 
