@@ -24,6 +24,7 @@ import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
+import com.wasin.presentation._theme.getScoreColor
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation.setting.SettingContentTheme
@@ -90,9 +91,10 @@ fun CompanyAndRouter(
             imageUrl = image
         )
         ImageMarker(
-            Modifier.absoluteOffset {
+            modifier = Modifier.absoluteOffset {
                 IntOffset(information.positionX.roundToInt(), information.positionY.roundToInt())
-            }
+            },
+            color = getScoreColor(information.score),
         )
     }
 }
