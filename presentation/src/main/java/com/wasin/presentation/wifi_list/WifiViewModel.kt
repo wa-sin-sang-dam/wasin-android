@@ -39,6 +39,8 @@ class WifiViewModel @Inject constructor(
     private val wifiUseCase: WifiUseCase,
 ): ViewModel() {
 
+    val wifiSort = mutableStateOf(WifiSort.RECOMMENDATION)
+
     private val _wifiList = mutableStateOf(FindAllHandOffResponse())
     val wifiList = _wifiList
 
@@ -117,6 +119,19 @@ class WifiViewModel @Inject constructor(
 
     fun getPassword(ssid: String): String {
         return dataStore.getData(ssid)
+    }
+
+    fun sort(index: Int) {
+        val sortFilter = WifiSort.entries.getOrNull(index) ?: WifiSort.RECOMMENDATION
+        _wifiList.value = _wifiList.value.copy(
+            routerList = _wifiList.value.routerList.sortedByDescending{
+                if (sortFilter == WifiSort.RECOMMENDATION) {
+                   it.level
+                }
+                else it.score
+            }
+        )
+        wifiSort.value = sortFilter
     }
 
     private fun getLocalWifiList() {
