@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._theme.gray_E8E8E8
@@ -30,13 +31,19 @@ fun BackOfficeScreen(
     WithTitle(
         title = "관리자 승인 대기"
     ) {
-        items(viewModel.waitingList.value.waitingList) { waitingList ->
-            WaitingItem(
-                name = waitingList.name,
-                onClick = {
-                    viewModel.acceptAdmin(waitingList.userId, waitingList.name)
-                }
-            )
+        val waitingList = viewModel.waitingList.value.waitingList
+        if (waitingList.isEmpty()) {
+            item { MyEmptyContent() }
+        }
+        else {
+            items(waitingList) { wait ->
+                WaitingItem(
+                    name = wait.name,
+                    onClick = {
+                        viewModel.acceptAdmin(wait.userId, wait.name)
+                    }
+                )
+            }
         }
     }
 }
