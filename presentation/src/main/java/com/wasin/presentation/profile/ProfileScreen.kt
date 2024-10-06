@@ -3,7 +3,6 @@ package com.wasin.presentation.profile
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.data.model.profile.FindAllProfileResponse
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.clickAsSingle
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_B8B8B8
 import com.wasin.presentation._theme.gray_E8E8E8
@@ -97,7 +97,7 @@ fun ProfileMode(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(30.dp))
-            .clickable(onClick = onClick)
+            .clickAsSingle(onClick = onClick)
             .border(border, RoundedCornerShape(30.dp))
             .background(background)
             .padding(40.dp, 20.dp)
@@ -169,7 +169,7 @@ fun ProfileComponent(
             .fillMaxWidth()
             .padding(bottom = 14.dp)
             .clip(RoundedCornerShape(30.dp))
-            .clickable(enabled = enabled, onClick = onClick)
+            .clickAsSingle(enabled = enabled, onClick = onClick)
             .border(border, RoundedCornerShape(30.dp))
             .background(background)
             .padding(20.dp),

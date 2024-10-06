@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import com.wasin.presentation.R
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.WithTitle
-import com.wasin.presentation._common.noRippleClickable
+import com.wasin.presentation._common.clickAsSingle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_A1A1A1
@@ -168,7 +168,7 @@ fun WithArrowItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .noRippleClickable(onClick),
+            .clickAsSingle(onClick = onClick),
         contentAlignment = Alignment.CenterStart
     ) {
         SettingText(

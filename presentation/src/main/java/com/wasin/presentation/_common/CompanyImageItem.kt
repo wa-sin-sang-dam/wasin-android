@@ -1,6 +1,5 @@
 package com.wasin.presentation._common
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,7 +48,7 @@ fun ImageMarker(
     Icon(
         modifier = modifier.offset(-20.dp, -20.dp)
             .size(40.dp)
-            .clickable(onClick = onClick),
+            .clickAsSingle(onClick = onClick),
         imageVector = Icons.Filled.LocationOn,
         contentDescription = "화살표 그림(이동하기)",
         tint = color,

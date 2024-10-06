@@ -66,7 +66,7 @@ private fun BackErase(
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(50.dp)
-            .clickable(onClick = onDelete),
+            .clickAsSingle(onClick = onDelete),
         contentAlignment = Alignment.Center
     ) {
         Image(
@@ -85,7 +85,7 @@ private fun DialKeypadItem(
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(50.dp)
-            .clickable(onClick = onAdd),
+            .clickAsSingle(onClick = onAdd),
         contentAlignment = Alignment.Center
     ) {
         Text(text = num, style = typography.titleLarge)
