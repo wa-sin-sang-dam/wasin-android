@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation._common.BlueLongButton
+import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.WithTitle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
@@ -44,20 +45,26 @@ fun CompanyAdminScreen(
     WithTitle(
         title = "회사 등록"
     ) {
-        items(viewModel.companyList.value.companyDBList) {item ->
-            CompanyAdminItemComponent(
-                name = item.companyName,
-                location = item.companyName,
-                isSelected = viewModel.isSelected(item.companyId),
-                onClick = { viewModel.setCompanyId(item.companyId) }
-            )
+        val companyDBList = viewModel.companyList.value.companyDBList
+        if (companyDBList.isEmpty()) {
+            item { MyEmptyContent() }
         }
-        item {
-            Spacer(modifier = Modifier.height(30.dp))
-            BlueLongButton(
-                text = "등록 완료",
-                onClick = { viewModel.saveCompany() }
-            )
+        else {
+            items(companyDBList) { item ->
+                CompanyAdminItemComponent(
+                    name = item.companyName,
+                    location = item.companyName,
+                    isSelected = viewModel.isSelected(item.companyId),
+                    onClick = { viewModel.setCompanyId(item.companyId) }
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(30.dp))
+                BlueLongButton(
+                    text = "등록 완료",
+                    onClick = { viewModel.saveCompany() }
+                )
+            }
         }
     }
 }

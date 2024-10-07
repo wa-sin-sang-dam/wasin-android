@@ -3,7 +3,6 @@ package com.wasin.presentation.router_list
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +35,9 @@ import com.wasin.data.model.router.FindAllRouterResponse
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
+import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.clickAsSingle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.getScoreColor
 import com.wasin.presentation._theme.gray_E8E8E8
@@ -51,8 +52,8 @@ fun RouterListScreen(
     navController: NavController,
     viewModel: RouterListViewModel = hiltViewModel()
 ) {
+    val routerList = viewModel.routerListDTO.value.routerList
     LaunchedEffectEvent(viewModel.eventFlow)
-
     WithTitle(
         title = "라우터 관리",
         description = "라우터 상태에 따라 원활할 경우 초록색, 불안정할 경우 빨간색으로 나타나요. \n" +
@@ -80,12 +81,17 @@ fun RouterListScreen(
                 modifier = Modifier.padding(top = 25.dp)
              )
         }
-        items(viewModel.routerListDTO.value.routerList) {
-            RouterItemComponent(
-                name = it.name,
-                score = it.score,
-                onClick = { navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=${it.routerId}") }
-            )
+        if (routerList.isEmpty()) {
+            item { MyEmptyContent() }
+        }
+        else {
+            items(routerList) {
+                RouterItemComponent(
+                    name = it.name,
+                    score = it.score,
+                    onClick = { navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=${it.routerId}") }
+                )
+            }
         }
     }
 }
@@ -93,7 +99,8 @@ fun RouterListScreen(
 @Composable
 fun NetworkStateMessage() {
     Column (
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .border(BorderStroke(1.dp, gray_E8E8E8), RoundedCornerShape(30.dp))
             .padding(vertical = 20.dp)
     ) {
@@ -119,7 +126,9 @@ fun NetworkStateMessage() {
 @Composable
 private fun ScoreDescription() {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 5.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, bottom = 5.dp)
     ) {
         Text(
             text = "혼잡",
@@ -191,7 +200,7 @@ fun RouterItemComponent(
             .clip(RoundedCornerShape(30.dp))
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable(onClick = onClick)
+            .clickAsSingle(onClick = onClick)
             .border(BorderStroke(0.5.dp, gray_E8E8E8), RoundedCornerShape(30.dp))
             .padding(horizontal = 30.dp, vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically

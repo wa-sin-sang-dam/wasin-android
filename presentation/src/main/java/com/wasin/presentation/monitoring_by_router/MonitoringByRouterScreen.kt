@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation._common.FilterDropDownButton
+import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation.monitoring.MonitoringTabLayer
 import com.wasin.presentation.monitoring.TimeEnum
 
@@ -18,6 +19,7 @@ fun MonitoringByRouterScreen(
     navController: NavController,
     viewModel: MonitoringByRouterViewModel = hiltViewModel()
 ) {
+    LaunchedEffectEvent(viewModel.eventFlow)
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -29,7 +31,8 @@ fun MonitoringByRouterScreen(
         )
         MonitoringTabLayer(
             state = viewModel.monitoring.value,
-            selectedTabIndex = viewModel.selectedTabIndex.value,
+            selectedTabIndex = viewModel.selectedTabIndex.intValue,
+            onRefresh = { viewModel.refreshMetric() },
             onTabClick = { tabIndex, metricId ->
                 viewModel.onTabClick(tabIndex, metricId)
             }

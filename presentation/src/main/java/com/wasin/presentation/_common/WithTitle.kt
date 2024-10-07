@@ -67,7 +67,7 @@ fun TitleAndContents(
         }
         if (containSetting) {
             SettingImage(
-                modifier = Modifier.clickable(onClick = onSettingClick)
+                modifier = Modifier.clickAsSingle(onClick = onSettingClick)
                     .align(Alignment.TopEnd)
             )
         }

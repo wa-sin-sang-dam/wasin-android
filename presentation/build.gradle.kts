@@ -70,6 +70,9 @@ dependencies {
     // refresh
     implementation(libs.accompanist.swiperefresh)
 
+    // permission
+    implementation(libs.accompanist.permissions)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

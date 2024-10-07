@@ -2,7 +2,6 @@ package com.wasin.presentation._common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -21,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -39,12 +41,14 @@ import com.wasin.presentation._util.NoRippleInteractionSource
 fun TextField(
     modifier: Modifier = Modifier,
     text: String = "",
+    onDone: () -> Unit = {},
     onValueChange: (String) -> Unit = {},
     placeholder: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     enabled: Boolean = true
 ) {
+    val localFocusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
         value = text,
@@ -55,6 +59,12 @@ fun TextField(
             .focusRequester(focusRequester),
         textStyle = typography.bodyMedium,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                localFocusManager.moveFocus(FocusDirection.Down)
+                onDone()
+            }
+        ),
         visualTransformation = visualTransformation,
         singleLine = true,
         enabled = enabled
@@ -93,7 +103,7 @@ fun TextFieldCardWithTitle(
                 .border(BorderStroke(1.dp, gray_C9C9C9), MaterialTheme.shapes.small)
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 44.dp)
-                .clickable(onClick = onClick),
+                .clickAsSingle(onClick = onClick),
         ) {
             Text(
                 modifier = Modifier
@@ -112,6 +122,7 @@ fun TextFieldWithTitle(
     modifier: Modifier = Modifier,
     title: String = "",
     text: String = "",
+    onDone: () -> Unit = {},
     onValueChange: (String) -> Unit = {},
     placeholder: String = "",
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -124,7 +135,16 @@ fun TextFieldWithTitle(
             style = typography.titleMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        TextField(modifier, text, onValueChange, placeholder, keyboardType, visualTransformation, enabled)
+        TextField(
+            modifier = modifier,
+            text = text,
+            onValueChange = onValueChange,
+            placeholder = placeholder,
+            keyboardType = keyboardType,
+            onDone = onDone,
+            visualTransformation = visualTransformation,
+            enabled = enabled
+        )
     }
 }
 

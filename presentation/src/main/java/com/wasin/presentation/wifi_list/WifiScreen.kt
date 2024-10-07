@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.wasin.data.model.handoff.FindAllHandOffResponse
 import com.wasin.presentation._common.FilterDropDownButton
 import com.wasin.presentation._common.GrayDivider
+import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
@@ -62,10 +63,12 @@ fun WifiScreen(
         item {
             WifiListComponent(
                 currentSSID = viewModel.currentSSID.value,
+                sortText = viewModel.wifiSort.value.kor,
                 password = { viewModel.getPassword(it) },
                 wifiList = viewModel.wifiList.value.routerList,
                 openWifiSetting = { viewModel.openWifiSettings() },
                 connectWifi = { a, b -> viewModel.connectInReal(a, b) },
+                onSort = { viewModel.sort(it) }
             )
         }
     }
@@ -74,10 +77,12 @@ fun WifiScreen(
 @Composable
 fun WifiListComponent(
     currentSSID: String = "",
+    sortText: String,
     password: (String) -> String,
     wifiList: List<FindAllHandOffResponse.RouterWithStateDTO>,
     openWifiSetting: () -> Unit,
-    connectWifi: (String, String) -> Unit
+    connectWifi: (String, String) -> Unit,
+    onSort: (Int) -> Unit = {},
 ) {
     Column {
         WifiListTitle()
@@ -92,19 +97,27 @@ fun WifiListComponent(
                 style = typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             FilterDropDownButton(
-                Modifier.align(Alignment.CenterEnd)
+                text = sortText,
+                modifier = Modifier.align(Alignment.CenterEnd),
+                selectList = WifiSort.entries.map { it.kor },
+                onClick = onSort
             )
         }
-        wifiList.forEach {
-            WifiItemComponent(
-                ssid = it.ssid,
-                level = it.level.toInt(),
-                score = it.score.toInt(),
-                password = it.password.ifEmpty { password(it.ssid) },
-                isCurrentConnect = it.ssid == currentSSID,
-                connectWifi = connectWifi,
-                openWifiSetting = openWifiSetting
-            )
+        if (wifiList.isEmpty()) {
+            MyEmptyContent()
+        }
+        else {
+            wifiList.forEach {
+                WifiItemComponent(
+                    ssid = it.ssid,
+                    level = it.level.toInt(),
+                    score = it.score.toInt(),
+                    password = it.password.ifEmpty { password(it.ssid) },
+                    isCurrentConnect = it.ssid == currentSSID,
+                    connectWifi = connectWifi,
+                    openWifiSetting = openWifiSetting
+                )
+            }
         }
     }
 }
@@ -176,7 +189,8 @@ fun WifiPasswordDialog(
             Text(
                 text = ssid,
                 style = typography.titleLarge,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
                     .padding(bottom = 45.dp)
             )
             TextFieldWithTitle(

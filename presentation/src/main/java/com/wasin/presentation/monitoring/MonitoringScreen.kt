@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
@@ -72,21 +73,22 @@ import com.patrykandpatrick.vico.core.common.component.Shadow
 import com.patrykandpatrick.vico.core.common.component.ShapeComponent
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.copyColor
-import com.patrykandpatrick.vico.core.common.data.ExtraStore
 import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.wasin.data.model.monitoring.FindMonitoringByIdResponse
 import com.wasin.presentation._common.FilterDropDownButton
 import com.wasin.presentation._common.GrayDivider
+import com.wasin.presentation._common.MyCircularProgress
+import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.metricColor
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.main_blue
+import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation._util.NoRippleInteractionSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -97,6 +99,7 @@ fun MonitoringScreen(
     navController: NavController,
     viewModel: MonitoringViewModel = hiltViewModel()
 ) {
+    LaunchedEffectEvent(viewModel.eventFlow)
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -113,6 +116,7 @@ fun MonitoringScreen(
         MonitoringTabLayer(
             state = viewModel.monitoring.value,
             selectedTabIndex = viewModel.selectedTabIndex.value,
+            onRefresh = { viewModel.refreshMetric() },
             onTabClick = { tabIndex, metricId ->
                 viewModel.onTabClick(tabIndex, metricId)
             }
@@ -151,14 +155,21 @@ fun FilterMonitoring(
 fun MonitoringTabLayer(
     state: MonitoringState,
     selectedTabIndex: Int,
+    onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
 ){
     val modelProducer = remember { CartesianChartModelProducer() }
     if (state.isLoading) {
-
+        MyCircularProgress()
     }
     else if (state.errorMessage.isNotEmpty()) {
-
+        Row(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            MyEmptyContent(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
     }
     else  {
         LaunchedEffect(key1 = state) {
@@ -175,6 +186,7 @@ fun MonitoringTabLayer(
         MonitoringTabLayerContent(
             metrics = state.metrics,
             selectedTabIndex = selectedTabIndex,
+            onRefresh = onRefresh,
             onTabClick = onTabClick,
             modelProducer = modelProducer,
         )
@@ -185,6 +197,7 @@ fun MonitoringTabLayer(
 fun MonitoringTabLayerContent(
     metrics: FindMonitoringByIdResponse,
     selectedTabIndex: Int,
+    onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
     modelProducer: CartesianChartModelProducer
 ) {
@@ -213,8 +226,8 @@ fun MonitoringTabLayerContent(
         )
         SwipeRefresh(
             state = refreshState,
-            onRefresh = {  },
-            indicator = { state, trigger -> /*SwipeRefreshIndicator(state, trigger)*/ }
+            onRefresh = onRefresh,
+            indicator = { state, trigger -> SwipeRefreshIndicator(state, trigger) }
         ) {
             HorizontalPager(
                 state = pagerState,
@@ -222,7 +235,7 @@ fun MonitoringTabLayerContent(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.Top
             ) { page ->
-                ComposeChart7(
+                MonitoringChart(
                     modelProducer = modelProducer,
                     graph = metrics.graphList,
                     isSamePage = page == selectedTabIndex
@@ -282,7 +295,7 @@ private fun TabLayerIndicator(
 }
 
 @Composable
-private fun ComposeChart7(
+private fun MonitoringChart(
     modelProducer: CartesianChartModelProducer,
     graph: List<FindMonitoringByIdResponse.MonitoringGraph>,
     isSamePage: Boolean
@@ -290,7 +303,7 @@ private fun ComposeChart7(
     val dateTimeFormatter = SimpleDateFormat("yyyy MM-dd HH:mm:ss", Locale.KOREA)
 
     if (!isSamePage) {
-        // CircularProgressIndicator()
+        MyCircularProgress()
     }
     else {
         val size = graph.size

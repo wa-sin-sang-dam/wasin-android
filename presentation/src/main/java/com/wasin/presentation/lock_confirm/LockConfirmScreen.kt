@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation._common.LockComponent
+import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.LaunchedEffectEvent
 import com.wasin.presentation._util.WasinBackHandler
@@ -24,7 +25,7 @@ fun LockConfirmScreen(
     LaunchedEffectEvent(
         eventFlow = viewModel.eventFlow,
         onNavigate = {
-            viewModel.saveScreenState(nextScreen)
+            viewModel.saveScreenState(WasinScreen.LockConfirmScreen.route)
             navController.navigate(nextScreen){
                 popUpTo(navController.graph.id) {
                     inclusive = true

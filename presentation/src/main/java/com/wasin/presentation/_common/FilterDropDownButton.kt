@@ -47,7 +47,7 @@ fun FilterDropDownButton(
     }
     Row(
         modifier = modifier
-            .clickable { isDialogOpen.value = true }
+            .clickAsSingle { isDialogOpen.value = true }
             .wrapContentHeight()
             .border(BorderStroke(1.dp, color), RoundedCornerShape(30.dp))
             .padding(vertical = 5.dp, horizontal = 12.dp),
@@ -88,7 +88,7 @@ fun FilterDropDownDialog(
                     style = typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable{
+                        .clickAsSingle{
                             onClick(i)
                             onDismissRequest()
                         }

@@ -3,6 +3,7 @@ package com.wasin.super_admin
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.wasin.presentation._navigate.BottomNavItem
@@ -11,15 +12,19 @@ import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._navigate.commonAdminNavGraph
 import com.wasin.presentation._navigate.commonNavGraph
 import com.wasin.presentation._theme.WasinAppTheme
+import com.wasin.presentation._util.startScreenData
 import com.wasin.super_admin.navigate.superAdminNavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
+            navController = rememberNavController()
             WasinAppTheme(
                 bottomBar = {
                     BottomNavigationBar(
@@ -41,6 +46,13 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             )
+        }
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (startScreenData(applicationContext)) {
+            navController.navigate(WasinScreen.LockConfirmScreen.route)
         }
     }
 }

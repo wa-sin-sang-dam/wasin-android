@@ -7,12 +7,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -43,10 +41,12 @@ import com.wasin.data.model.company.FindAllCompanyByOpenAPIResponse
 import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.GrayDivider
+import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.TextFieldCardWithTitle
 import com.wasin.presentation._common.TextFieldWithTitle
 import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.clickAsSingle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_C9C9C9
@@ -144,6 +144,7 @@ fun CompanyDialog(
                     text = companyName,
                     placeholder = "회사 이름을 입력해주세요.",
                     onValueChange = enterCompany,
+                    onDone = searchCompany,
                     modifier = Modifier.padding(top = 30.dp, bottom = 25.dp)
                 )
                 Image(
@@ -151,23 +152,28 @@ fun CompanyDialog(
                     contentDescription = "search company",
                     modifier = Modifier
                         .padding(top = 5.dp, end = 20.dp)
-                        .clickable(onClick = searchCompany)
+                        .clickAsSingle(onClick = searchCompany)
                         .height(20.dp)
                         .align(Alignment.CenterEnd)
                 )
             }
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                items(companyList) {
-                    CompanyItemComponent(
-                        companyName = it.companyName,
-                        location = it.location,
-                        onClick = {
-                            selectCompany(it.companyName, it.companyFssId, it.location)
-                            onDismissRequest()
-                        },
-                    )
+            if (companyList.isEmpty()) {
+                MyEmptyContent()
+            }
+            else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    items(companyList) {
+                        CompanyItemComponent(
+                            companyName = it.companyName,
+                            location = it.location,
+                            onClick = {
+                                selectCompany(it.companyName, it.companyFssId, it.location)
+                                onDismissRequest()
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -182,7 +188,7 @@ fun CompanyItemComponent(
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickAsSingle(onClick = onClick)
     ) {
         Text(
             text = companyName,
@@ -223,7 +229,7 @@ fun CompanyImageInput(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
                 .border(BorderStroke(1.dp, gray_C9C9C9), RoundedCornerShape(10.dp))
-                .clickable { galleryLauncher.launch("image/*") }
+                .clickAsSingle { galleryLauncher.launch("image/*") }
                 .padding(vertical = if (image.equals(Uri.EMPTY)) 60.dp else 0.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

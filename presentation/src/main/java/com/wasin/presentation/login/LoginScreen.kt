@@ -1,5 +1,8 @@
 package com.wasin.presentation.login
 
+import android.Manifest
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,17 +12,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.wasin.data._const.DataStoreKey
+import com.wasin.data.datastore.WasinDataStore
 import com.wasin.data.model.user.LoginRequest
 import com.wasin.presentation.R
 import com.wasin.presentation._common.BlueLongButton
+import com.wasin.presentation._common.MyDialog
 import com.wasin.presentation._common.TextField
 import com.wasin.presentation._common.WhiteLongButton
 import com.wasin.presentation._navigate.WasinScreen
@@ -42,6 +53,9 @@ fun LoginScreen(
             }
         }
     )
+    if (nextScreen == WasinScreen.WifiListScreen.route) {
+        RequestNotificationPermissionDialog()
+    }
     LazyColumn (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -59,6 +73,39 @@ fun LoginScreen(
         item { SignupButton{ navController.navigate(WasinScreen.SignupScreen.route) } }
     }
 }
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun RequestNotificationPermissionDialog() {
+    val context = LocalContext.current
+    val key = DataStoreKey.NOTIFICATION_PERMISSION_KEY.name
+    val isOpen = remember { mutableStateOf(WasinDataStore(context).getData(key).isEmpty()) }
+    val permissionState =  rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.POST_NOTIFICATIONS,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+    )
+
+    MyDialog(
+        text = "'와신상담'에선 주요 기능을 사용하기 위해선 푸시 알림과 위치 권한이 필요합니다.\n\n" +
+                "해당 권한에 수신 동의하시겠습니까?\n\n" +
+                "권한은 [설정 > 알림 설정] 에서 변경하실 수 있습니다. ",
+        isOpen = isOpen,
+        onCancelClick = {
+            makePermissionToastMessage(context)
+        },
+        onConfirmClick = {
+            permissionState.launchMultiplePermissionRequest()
+            WasinDataStore(context).setData(key, "true")
+        }
+    )
+}
+
+private fun makePermissionToastMessage(context: Context) {
+    Toast.makeText(context, "알림설정을 허용하지 않으면 와이파이 조회 기능을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show()
+}
+
 
 @Composable
 fun WasinLogo() {

@@ -55,6 +55,10 @@ class MonitoringByRouterViewModel @Inject constructor(
         findMonitoring()
     }
 
+    fun refreshMetric() {
+        findMonitoring()
+    }
+
     private fun findMonitoring() {
         findMonitoringByRouterId(
             metricId.value,
