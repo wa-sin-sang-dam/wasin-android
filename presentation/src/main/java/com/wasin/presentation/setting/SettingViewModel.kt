@@ -44,7 +44,7 @@ class SettingViewModel @Inject constructor(
                     is Resource.Error -> _eventFlow.emit(WasinEvent.MakeToast(response.message))
                     is Resource.Loading -> _eventFlow.emit(WasinEvent.Loading)
                     is Resource.Success -> {
-                        setDataForInit()
+                        dataStore.setData(DataStoreKey.START_SCREEN_KEY.name, WasinScreen.LoginScreen.route)
                         _eventFlow.emit(WasinEvent.Navigate)
                     }
                 }
@@ -59,7 +59,7 @@ class SettingViewModel @Inject constructor(
                     is Resource.Error -> _eventFlow.emit(WasinEvent.MakeToast(response.message))
                     is Resource.Loading -> _eventFlow.emit(WasinEvent.Loading)
                     is Resource.Success -> {
-                        setDataForInit()
+                        dataStore.setData(DataStoreKey.START_SCREEN_KEY.name, WasinScreen.LoginScreen.route)
                         _eventFlow.emit(WasinEvent.Navigate)
                     }
                 }
@@ -67,10 +67,7 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    private fun setDataForInit() {
-        dataStore.setData(DataStoreKey.START_SCREEN_KEY.name, WasinScreen.LoginScreen.route)
-        dataStore.setData(DataStoreKey.EMAIL_KEY.name, "")
-    }
+
 
 
 }

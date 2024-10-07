@@ -12,6 +12,9 @@ import com.wasin.data.model.user.SignupRequest
 import com.wasin.data.util.ApiUtils
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerAuthProvider
+import io.ktor.client.plugins.plugin
 import io.ktor.client.request.delete
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -26,6 +29,7 @@ class UserApi(
     }
 
     override suspend fun login(loginRequest: LoginRequest): ApiUtils.ApiResult<LoginResponse> {
+        client.plugin(Auth).providers.filterIsInstance<BearerAuthProvider>().first().clearToken()
         return client.post(HttpRoutes.LOGIN.getPath1()) {
             setBody(loginRequest)
         }.body()
