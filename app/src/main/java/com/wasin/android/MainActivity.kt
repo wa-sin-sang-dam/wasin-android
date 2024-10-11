@@ -15,6 +15,7 @@ import com.wasin.android.navigate.userNavGraph
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._navigate.commonNavGraph
 import com.wasin.presentation._theme.WasinAppTheme
+import com.wasin.presentation._util.WasinWorkManager
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 

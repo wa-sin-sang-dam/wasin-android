@@ -3,6 +3,7 @@ package com.wasin.admin
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             navController = rememberNavController()
+            openRouterDetail(navController)
             WasinAppTheme(
                 bottomBar = {
                     BottomNavigationBar(
@@ -55,6 +57,18 @@ class MainActivity : ComponentActivity() {
             navController.navigate(WasinScreen.LockConfirmScreen.route)
         }
     }
+
+    private fun openRouterDetail(navController: NavController) {
+        try {
+            if (intent?.extras != null) {
+                val routerId = intent.extras!!.get("routerId").toString().toIntOrNull()
+                if (routerId != null) {
+                    navController.navigate(WasinScreen.RouterDetailScreen.route + "?routerId=$routerId")
+                }
+            }
+        } catch(_: Exception){ }
+    }
+
 
 
 }
