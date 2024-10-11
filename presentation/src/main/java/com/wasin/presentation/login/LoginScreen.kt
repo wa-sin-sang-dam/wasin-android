@@ -53,9 +53,9 @@ fun LoginScreen(
             }
         }
     )
-    if (nextScreen == WasinScreen.WifiListScreen.route) {
-        RequestNotificationPermissionDialog()
-    }
+    RequestNotificationPermissionDialog(
+        nextScreen == WasinScreen.WifiListScreen.route
+    )
     LazyColumn (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -76,15 +76,22 @@ fun LoginScreen(
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun RequestNotificationPermissionDialog() {
+fun RequestNotificationPermissionDialog(
+    withLocationPermission: Boolean
+) {
     val context = LocalContext.current
     val key = DataStoreKey.NOTIFICATION_PERMISSION_KEY.name
     val isOpen = remember { mutableStateOf(WasinDataStore(context).getData(key).isEmpty()) }
     val permissionState =  rememberMultiplePermissionsState(
-        listOf(
-            Manifest.permission.POST_NOTIFICATIONS,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        if (withLocationPermission) {
+            listOf(
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        }
+        else {
+            listOf(Manifest.permission.POST_NOTIFICATIONS)
+        }
     )
 
     MyDialog(
