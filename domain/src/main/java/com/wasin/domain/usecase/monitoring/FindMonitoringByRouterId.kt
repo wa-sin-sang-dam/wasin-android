@@ -14,7 +14,7 @@ class FindMonitoringByRouterId @Inject constructor(
     operator fun invoke(metricId: Long?, routerId: Int, time: Int?): Flow<Resource<FindMonitoringByIdResponse>> = flow {
         try {
             emit(Resource.Loading())
-            val result = monitoringRepository.findById(metricId, routerId, time)
+            val result = monitoringRepository.monitorById(metricId, routerId, time)
             val success = result.response ?: FindMonitoringByIdResponse()
             val errorMessage = result.error?.message ?: "라우터 개별 모니터링에 실패했습니다."
 

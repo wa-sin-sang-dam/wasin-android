@@ -47,8 +47,8 @@ enum class HttpRoutes(
     CHANGE_MODE_MANUAL("hand-off/mode/manual"),
 
     // monitoring
-    MONITORING("monitoring"),
-    MONITORING_ROUTER("monitoring/routers"),
+    MONITORING_BY_ID("monitoring"),
+    MONITORING_MULTIPLE("monitoring"),
 
     ;
 
