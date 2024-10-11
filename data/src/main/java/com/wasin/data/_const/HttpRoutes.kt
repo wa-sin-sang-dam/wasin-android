@@ -30,9 +30,11 @@ enum class HttpRoutes(
 
     // router
     ROUTER("router"),
-    ROUTER_MONITORING("router/monitoring"),
     GET_COMPANY_IMAGE("router/image"),
     DELETE_ROUTER("router/delete"),
+    ROUTER_CHECK("router/check"),
+    ROUTER_LOG("router/log"),
+    ROUTER_EMAIL_LOG("router/log/email"),
 
     // profile
     GET_PROFILE("profile"),
