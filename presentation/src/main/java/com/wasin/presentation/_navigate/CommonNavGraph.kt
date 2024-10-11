@@ -10,8 +10,10 @@ import com.wasin.presentation.monitoring.MonitoringScreen
 import com.wasin.presentation.monitoring_by_router.MonitoringByRouterScreen
 import com.wasin.presentation.profile.ProfileScreen
 import com.wasin.presentation.router_add.RouterAddScreen
+import com.wasin.presentation.router_check.RouterCheckScreen
 import com.wasin.presentation.router_detail.RouterDetailScreen
 import com.wasin.presentation.router_list.RouterListScreen
+import com.wasin.presentation.router_log.RouterLogScreen
 import com.wasin.presentation.router_update.RouterUpdateScreen
 import com.wasin.presentation.setting.SettingScreen
 import com.wasin.presentation.splash.SplashScreen
@@ -86,5 +88,25 @@ fun NavGraphBuilder.commonAdminNavGraph(
             },
         ),
         content = { RouterUpdateScreen(navController) }
+    )
+    composable(
+        route = WasinScreen.RouterCheckScreen.route + "?routerId={routerId}",
+        arguments = listOf(
+            navArgument("routerId"){
+                type = NavType.LongType
+                defaultValue = -1L
+            },
+        ),
+        content = { RouterCheckScreen(navController) }
+    )
+    composable(
+        route = WasinScreen.RouterLogScreen.route + "?routerId={routerId}",
+        arguments = listOf(
+            navArgument("routerId"){
+                type = NavType.LongType
+                defaultValue = -1L
+            },
+        ),
+        content = { RouterLogScreen(navController) }
     )
 }

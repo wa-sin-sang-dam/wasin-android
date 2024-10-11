@@ -57,7 +57,12 @@ fun RouterDetailScreen(
                 navController.navigate(WasinScreen.MonitoringByRouterScreen.route + "?routerId=$routerId")
             } 
         }
-        item { SystemRestore() }
+        item {
+            SystemRestore(
+                onCheck = { navController.navigate(WasinScreen.RouterCheckScreen.route + "?routerId=$routerId") },
+                onSend = { navController.navigate(WasinScreen.RouterLogScreen.route + "?routerId=$routerId") }
+            )
+        }
         item {
             Editing(
                 onUpdateClick = { navController.navigate(WasinScreen.RouterUpdateScreen.route + "?routerId=${routerId}") },
@@ -150,16 +155,15 @@ fun RouterMonitoring(
 }
 
 @Composable
-fun SystemRestore() {
+fun SystemRestore(
+    onCheck: () -> Unit,
+    onSend: () -> Unit
+) {
     SettingContentTheme(
         title = "복구하기"
     ) {
-        WithArrowItem("시스템 점검하기") {
-
-        }
-        WithArrowItem("로그 파일 이메일 전송하기") {
-
-        }
+        WithArrowItem("시스템 점검하기", onCheck)
+        WithArrowItem("로그 파일 이메일 전송하기", onSend)
     }
 }
 

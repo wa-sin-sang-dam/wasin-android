@@ -49,7 +49,8 @@ val typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = SuiteFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp
+        fontSize = 14.sp,
+        lineHeight = 20.sp
     ),
     // 소제목 아래 설명
     bodyMedium = TextStyle(
