@@ -39,7 +39,12 @@ class LoginViewModel @Inject constructor(
                     password = event.password
                 )
             }
-            is LoginEvent.Login -> login()
+            is LoginEvent.Login -> {
+                _loginDTO.value = _loginDTO.value.copy(
+                    fcmToken = getFcmToken()
+                )
+                login()
+            }
         }
     }
 
@@ -51,6 +56,10 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (isInvalid()) {
                 _eventFlow.emit(WasinEvent.MakeToast("이메일이나 비밀번호는 비어있으면 안됩니다."))
+                return@launch
+            }
+            if (loginDTO.value.fcmToken.isEmpty()) {
+                _eventFlow.emit(WasinEvent.MakeToast("잠시 후 다시 시도해주세요."))
                 return@launch
             }
             loginUseCase(loginDTO.value).collect { response ->
@@ -65,6 +74,8 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    private fun getFcmToken() = dataStore.getData(DataStoreKey.FCM_TOKEN_KEY.name)
 
     private fun isInvalid() = loginDTO.value.email.isEmpty() || loginDTO.value.password.isEmpty()
 
