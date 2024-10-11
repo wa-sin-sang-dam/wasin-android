@@ -6,10 +6,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wasin.data.model.monitoring.FindMonitoringByIdResponse
+import com.wasin.data.model.monitoring.FindMultipleMonitorResponse
 import com.wasin.domain.usecase.monitoring.FindMonitoringByRouterId
 import com.wasin.domain.utils.Resource
 import com.wasin.presentation._util.WasinEvent
-import com.wasin.presentation.monitoring.MonitoringState
+import com.wasin.presentation.monitoring.MonitoringMultipleState
 import com.wasin.presentation.monitoring.TimeEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,7 +30,7 @@ class MonitoringByRouterViewModel @Inject constructor(
     private val metricId = mutableStateOf<Long?>(null)
     private val routerId = mutableIntStateOf(-1)
 
-    private val _monitoring = mutableStateOf(MonitoringState())
+    private val _monitoring = mutableStateOf(MonitoringMultipleState())
     val monitoring = _monitoring
 
     private val _eventFlow = MutableSharedFlow<WasinEvent>()
@@ -43,8 +44,8 @@ class MonitoringByRouterViewModel @Inject constructor(
     }
 
     fun onTabClick(tabIndex: Int, _metricId: Long?) {
-        if (selectedTabIndex.value != tabIndex){
-            selectedTabIndex.value = tabIndex
+        if (selectedTabIndex.intValue != tabIndex){
+            selectedTabIndex.intValue = tabIndex
             metricId.value = _metricId
             findMonitoring()
         }
@@ -65,8 +66,18 @@ class MonitoringByRouterViewModel @Inject constructor(
             routerId.intValue,
             activeTime.value.time
         ).onEach { response ->
+            val data = response.data ?: FindMonitoringByIdResponse()
             _monitoring.value = _monitoring.value.copy(
-                metrics = response.data ?: FindMonitoringByIdResponse(),
+                metrics = FindMultipleMonitorResponse(
+                    activeMetricId = data.activeMetricId,
+                    settingTime = data.settingTime,
+                    metricList = data.metricList.map {
+                        FindMultipleMonitorResponse.MonitoringMetric(it.metric, it.metricId)
+                    },
+                    graphList = data.graphList.map {
+                        FindMultipleMonitorResponse.MonitoringGraph(it.labels, it.timeList, it.valueList)
+                    }
+                ),
                 isLoading = response is Resource.Loading,
                 errorMessage = if (response is Resource.Error) response.message else ""
             )

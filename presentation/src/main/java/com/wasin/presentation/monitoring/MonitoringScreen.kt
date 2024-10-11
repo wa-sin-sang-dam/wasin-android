@@ -75,7 +75,7 @@ import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.copyColor
 import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
-import com.wasin.data.model.monitoring.FindMonitoringByIdResponse
+import com.wasin.data.model.monitoring.FindMultipleMonitorResponse
 import com.wasin.presentation._common.FilterDropDownButton
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.MyCircularProgress
@@ -105,18 +105,13 @@ fun MonitoringScreen(
     ) {
         FilterMonitoring(
             modifier = Modifier.align(Alignment.End),
-            routerList = viewModel.routers.value.routerList.map {
-                "${it.name} (${it.instance})"
-            },
-            router = viewModel.activeRouter.value.name,
             time = viewModel.activeTime.value.kor,
-            routerClick = { viewModel.refreshRouter(it) },
             timeClick = { viewModel.refreshTime(it) }
         )
         MonitoringTabLayer(
             state = viewModel.monitoring.value,
-            selectedTabIndex = viewModel.selectedTabIndex.value,
-            onRefresh = { viewModel.refreshMetric() },
+            selectedTabIndex = viewModel.selectedTabIndex.intValue,
+            onRefresh = { viewModel.refresh() },
             onTabClick = { tabIndex, metricId ->
                 viewModel.onTabClick(tabIndex, metricId)
             }
@@ -127,33 +122,20 @@ fun MonitoringScreen(
 @Composable
 fun FilterMonitoring(
     modifier: Modifier,
-    routerList: List<String> = emptyList(),
-    router: String,
     time: String,
-    routerClick: (Int) -> Unit = {},
     timeClick: (Int) -> Unit = {}
 ) {
-    Row(
-        modifier = modifier.padding(top = 10.dp)
-    ) {
-        FilterDropDownButton(
-            text = router,
-            selectList = routerList,
-            onClick = routerClick,
-            color = main_blue,
-        )
-        FilterDropDownButton(
-            modifier = Modifier.padding(start = 7.dp),
-            text = time,
-            selectList = TimeEnum.entries.map { it.kor }.toList(),
-            onClick = timeClick
-        )
-    }
+    FilterDropDownButton(
+        modifier = modifier.padding(top = 10.dp, start = 7.dp),
+        text = time,
+        selectList = TimeEnum.entries.map { it.kor }.toList(),
+        onClick = timeClick
+    )
 }
 
 @Composable
 fun MonitoringTabLayer(
-    state: MonitoringState,
+    state: MonitoringMultipleState,
     selectedTabIndex: Int,
     onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
@@ -195,7 +177,7 @@ fun MonitoringTabLayer(
 
 @Composable
 fun MonitoringTabLayerContent(
-    metrics: FindMonitoringByIdResponse,
+    metrics: FindMultipleMonitorResponse,
     selectedTabIndex: Int,
     onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
@@ -248,7 +230,7 @@ fun MonitoringTabLayerContent(
 @Composable
 fun TopMetricList(
     selectedTabIndex: Int,
-    tabs: List<FindMonitoringByIdResponse.MonitoringMetric>,
+    tabs: List<FindMultipleMonitorResponse.MonitoringMetric>,
     onTabClick: (Int) -> Unit
 ) {
     ScrollableTabRow(
@@ -297,10 +279,10 @@ private fun TabLayerIndicator(
 @Composable
 private fun MonitoringChart(
     modelProducer: CartesianChartModelProducer,
-    graph: List<FindMonitoringByIdResponse.MonitoringGraph>,
+    graph: List<FindMultipleMonitorResponse.MonitoringGraph>,
     isSamePage: Boolean
 ) {
-    val dateTimeFormatter = SimpleDateFormat("yyyy MM-dd HH:mm:ss", Locale.KOREA)
+    val dateTimeFormatter = SimpleDateFormat("yyyy MM-dd HH:mm:ss", Locale.US)
 
     if (!isSamePage) {
         MyCircularProgress()
@@ -335,7 +317,7 @@ private fun MonitoringChart(
                     itemPlacer = HorizontalAxis.ItemPlacer.segmented(),
                     valueFormatter = { _, value, _ ->
                         dateTimeFormatter.format(
-                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong()))
+                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong() + 60*60*9*1000))
                         )
                     }
                 ),
@@ -367,7 +349,7 @@ private fun rememberStartAxisLabel() =
 
 @Composable
 private fun rememberLegend(
-    graph: List<FindMonitoringByIdResponse.MonitoringGraph>
+    graph: List<FindMultipleMonitorResponse.MonitoringGraph>
 ): Legend<CartesianMeasuringContext, CartesianDrawingContext> {
     val labelComponent = rememberTextComponent(vicoTheme.textColor)
     return rememberHorizontalLegend(
