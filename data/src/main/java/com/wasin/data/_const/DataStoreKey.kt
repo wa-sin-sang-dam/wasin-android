@@ -7,4 +7,5 @@ enum class DataStoreKey {
     START_SCREEN_KEY,
     EMAIL_KEY,
     NOTIFICATION_PERMISSION_KEY,
+    ROUTER_ID_KEY
 }

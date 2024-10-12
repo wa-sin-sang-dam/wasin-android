@@ -6,9 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.wasin.data._const.DataStoreKey
+import com.wasin.data.datastore.WasinDataStore
 import com.wasin.presentation._common.LockComponent
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.typography
@@ -21,12 +24,18 @@ fun LockConfirmScreen(
     nextScreen: String,
     viewModel: LockConfirmViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     WasinBackHandler()
     LaunchedEffectEvent(
         eventFlow = viewModel.eventFlow,
         onNavigate = {
+            val key = DataStoreKey.ROUTER_ID_KEY.name
+            val routerId = WasinDataStore(context).getData(key)
+            val screen = if (routerId.isEmpty()) nextScreen else WasinScreen.RouterDetailScreen.route + "?routerId=$routerId"
+            WasinDataStore(context).clear(key)
+
             viewModel.saveScreenState(WasinScreen.LockConfirmScreen.route)
-            navController.navigate(nextScreen){
+            navController.navigate(screen){
                 popUpTo(navController.graph.id) {
                     inclusive = true
                 }
