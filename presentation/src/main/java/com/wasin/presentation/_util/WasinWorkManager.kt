@@ -1,4 +1,4 @@
-package com.wasin.android
+package com.wasin.presentation._util
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -22,7 +22,6 @@ import com.wasin.domain.usecase.handoff.FindBestHandOff
 import com.wasin.domain.usecase.wifi.ConnectWifi
 import com.wasin.domain.usecase.wifi.GetWifiState
 import com.wasin.domain.utils.Resource
-import com.wasin.presentation._util.getWifiLevel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 

@@ -45,6 +45,10 @@ class RouterDetailViewModel @Inject constructor (
     fun enterImageSize(width: Int) {
         _imageWidth.value = width
     }
+
+    fun refresh() {
+        findRouterById()
+    }
     private fun findRouterById() {
         viewModelScope.launch {
             findRouterByIdUseCase(_routerId.longValue).collect { response ->

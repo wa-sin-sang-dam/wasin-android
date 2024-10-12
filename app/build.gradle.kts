@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -53,9 +54,8 @@ android {
 
 dependencies {
 
-    implementation(project(":presentation"))
-    implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":presentation"))
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.work.runtime.ktx)
@@ -63,6 +63,11 @@ dependencies {
     kapt(libs.androidx.hilt.compiler)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.firebase.messaging.directboot)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

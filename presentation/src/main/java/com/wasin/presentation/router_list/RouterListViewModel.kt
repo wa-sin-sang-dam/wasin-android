@@ -37,6 +37,10 @@ class RouterListViewModel @Inject constructor(
         _imageWidth.value = width
     }
 
+    fun refresh() {
+        findAllRouter()
+    }
+
     private fun findAllRouter() {
         viewModelScope.launch {
             findAllRouterUseCase().collect { response ->

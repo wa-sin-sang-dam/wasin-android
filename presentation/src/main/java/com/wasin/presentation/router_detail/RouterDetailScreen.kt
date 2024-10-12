@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import com.wasin.data.model.router.FindByRouterIdResponse
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
-import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.WithTitleAndRefresh
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.getScoreColor
 import com.wasin.presentation._theme.typography
@@ -41,8 +41,9 @@ fun RouterDetailScreen(
         eventFlow = viewModel.eventFlow,
         onNavigate = { navController.navigate(WasinScreen.RouterListScreen.route) }
     )
-    WithTitle(
-        title = viewModel.routerDTO.value.information.name
+    WithTitleAndRefresh(
+        title = viewModel.routerDTO.value.information.name,
+        onRefresh = { viewModel.refresh() }
     ) {
         item {
             CompanyAndRouter(
@@ -57,7 +58,12 @@ fun RouterDetailScreen(
                 navController.navigate(WasinScreen.MonitoringByRouterScreen.route + "?routerId=$routerId")
             } 
         }
-        item { SystemRestore() }
+        item {
+            SystemRestore(
+                onCheck = { navController.navigate(WasinScreen.RouterCheckScreen.route + "?routerId=$routerId") },
+                onSend = { navController.navigate(WasinScreen.RouterLogScreen.route + "?routerId=$routerId") }
+            )
+        }
         item {
             Editing(
                 onUpdateClick = { navController.navigate(WasinScreen.RouterUpdateScreen.route + "?routerId=${routerId}") },
@@ -150,16 +156,15 @@ fun RouterMonitoring(
 }
 
 @Composable
-fun SystemRestore() {
+fun SystemRestore(
+    onCheck: () -> Unit,
+    onSend: () -> Unit
+) {
     SettingContentTheme(
         title = "복구하기"
     ) {
-        WithArrowItem("시스템 점검하기") {
-
-        }
-        WithArrowItem("로그 파일 이메일 전송하기") {
-
-        }
+        WithArrowItem("시스템 점검하기", onCheck)
+        WithArrowItem("로그 파일 이메일 전송하기", onSend)
     }
 }
 

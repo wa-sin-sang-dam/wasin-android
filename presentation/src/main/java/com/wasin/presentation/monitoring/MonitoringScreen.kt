@@ -27,8 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
@@ -75,7 +73,7 @@ import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.copyColor
 import com.patrykandpatrick.vico.core.common.shape.Corner
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
-import com.wasin.data.model.monitoring.FindMonitoringByIdResponse
+import com.wasin.data.model.monitoring.FindMultipleMonitorResponse
 import com.wasin.presentation._common.FilterDropDownButton
 import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.MyCircularProgress
@@ -99,24 +97,19 @@ fun MonitoringScreen(
     navController: NavController,
     viewModel: MonitoringViewModel = hiltViewModel()
 ) {
+    val refreshState = rememberSwipeRefreshState(isRefreshing = false)
     LaunchedEffectEvent(viewModel.eventFlow)
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         FilterMonitoring(
             modifier = Modifier.align(Alignment.End),
-            routerList = viewModel.routers.value.routerList.map {
-                "${it.name} (${it.instance})"
-            },
-            router = viewModel.activeRouter.value.name,
             time = viewModel.activeTime.value.kor,
-            routerClick = { viewModel.refreshRouter(it) },
             timeClick = { viewModel.refreshTime(it) }
         )
         MonitoringTabLayer(
             state = viewModel.monitoring.value,
-            selectedTabIndex = viewModel.selectedTabIndex.value,
-            onRefresh = { viewModel.refreshMetric() },
+            selectedTabIndex = viewModel.selectedTabIndex.intValue,
             onTabClick = { tabIndex, metricId ->
                 viewModel.onTabClick(tabIndex, metricId)
             }
@@ -127,35 +120,21 @@ fun MonitoringScreen(
 @Composable
 fun FilterMonitoring(
     modifier: Modifier,
-    routerList: List<String> = emptyList(),
-    router: String,
     time: String,
-    routerClick: (Int) -> Unit = {},
     timeClick: (Int) -> Unit = {}
 ) {
-    Row(
-        modifier = modifier.padding(top = 10.dp)
-    ) {
-        FilterDropDownButton(
-            text = router,
-            selectList = routerList,
-            onClick = routerClick,
-            color = main_blue,
-        )
-        FilterDropDownButton(
-            modifier = Modifier.padding(start = 7.dp),
-            text = time,
-            selectList = TimeEnum.entries.map { it.kor }.toList(),
-            onClick = timeClick
-        )
-    }
+    FilterDropDownButton(
+        modifier = modifier.padding(top = 10.dp, start = 7.dp),
+        text = time,
+        selectList = TimeEnum.entries.map { it.kor }.toList(),
+        onClick = timeClick
+    )
 }
 
 @Composable
 fun MonitoringTabLayer(
-    state: MonitoringState,
+    state: MonitoringMultipleState,
     selectedTabIndex: Int,
-    onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
 ){
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -186,7 +165,6 @@ fun MonitoringTabLayer(
         MonitoringTabLayerContent(
             metrics = state.metrics,
             selectedTabIndex = selectedTabIndex,
-            onRefresh = onRefresh,
             onTabClick = onTabClick,
             modelProducer = modelProducer,
         )
@@ -195,15 +173,13 @@ fun MonitoringTabLayer(
 
 @Composable
 fun MonitoringTabLayerContent(
-    metrics: FindMonitoringByIdResponse,
+    metrics: FindMultipleMonitorResponse,
     selectedTabIndex: Int,
-    onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
     modelProducer: CartesianChartModelProducer
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState (selectedTabIndex) { metrics.metricList.size }
-    val refreshState = rememberSwipeRefreshState(isRefreshing = false)
 
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
         if (!pagerState.isScrollInProgress) {
@@ -224,23 +200,17 @@ fun MonitoringTabLayerContent(
                 }
             }
         )
-        SwipeRefresh(
-            state = refreshState,
-            onRefresh = onRefresh,
-            indicator = { state, trigger -> SwipeRefreshIndicator(state, trigger) }
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                pageSpacing = 15.dp,
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.Top
-            ) { page ->
-                MonitoringChart(
-                    modelProducer = modelProducer,
-                    graph = metrics.graphList,
-                    isSamePage = page == selectedTabIndex
-                )
-            }
+        HorizontalPager(
+            state = pagerState,
+            pageSpacing = 15.dp,
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.Top
+        ) { page ->
+            MonitoringChart(
+                modelProducer = modelProducer,
+                graph = metrics.graphList,
+                isSamePage = page == selectedTabIndex
+            )
         }
     }
 }
@@ -248,7 +218,7 @@ fun MonitoringTabLayerContent(
 @Composable
 fun TopMetricList(
     selectedTabIndex: Int,
-    tabs: List<FindMonitoringByIdResponse.MonitoringMetric>,
+    tabs: List<FindMultipleMonitorResponse.MonitoringMetric>,
     onTabClick: (Int) -> Unit
 ) {
     ScrollableTabRow(
@@ -297,10 +267,10 @@ private fun TabLayerIndicator(
 @Composable
 private fun MonitoringChart(
     modelProducer: CartesianChartModelProducer,
-    graph: List<FindMonitoringByIdResponse.MonitoringGraph>,
+    graph: List<FindMultipleMonitorResponse.MonitoringGraph>,
     isSamePage: Boolean
 ) {
-    val dateTimeFormatter = SimpleDateFormat("yyyy MM-dd HH:mm:ss", Locale.KOREA)
+    val dateTimeFormatter = SimpleDateFormat("yyyy MM-dd HH:mm:ss", Locale.US)
 
     if (!isSamePage) {
         MyCircularProgress()
@@ -335,7 +305,7 @@ private fun MonitoringChart(
                     itemPlacer = HorizontalAxis.ItemPlacer.segmented(),
                     valueFormatter = { _, value, _ ->
                         dateTimeFormatter.format(
-                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong()))
+                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong() + 60*60*9*1000))
                         )
                     }
                 ),
@@ -367,7 +337,7 @@ private fun rememberStartAxisLabel() =
 
 @Composable
 private fun rememberLegend(
-    graph: List<FindMonitoringByIdResponse.MonitoringGraph>
+    graph: List<FindMultipleMonitorResponse.MonitoringGraph>
 ): Legend<CartesianMeasuringContext, CartesianDrawingContext> {
     val labelComponent = rememberTextComponent(vicoTheme.textColor)
     return rememberHorizontalLegend(

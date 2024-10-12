@@ -167,8 +167,8 @@ fun WithArrowItem(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickAsSingle(onClick = onClick),
+            .clickAsSingle(onClick = onClick)
+            .fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
     ) {
         SettingText(

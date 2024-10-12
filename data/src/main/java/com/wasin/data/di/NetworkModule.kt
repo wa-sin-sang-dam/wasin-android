@@ -92,9 +92,9 @@ class NetworkModule {
                 })
             }
             install(HttpTimeout) {
-                connectTimeoutMillis = 8000
-                requestTimeoutMillis = 8000
-                socketTimeoutMillis = 8000
+                connectTimeoutMillis = 1000 * 60 * 3
+                requestTimeoutMillis = 1000 * 60 * 3
+                socketTimeoutMillis = 1000 * 60 * 3
             }
             install(Auth) {
                 bearer {

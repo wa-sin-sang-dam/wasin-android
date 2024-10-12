@@ -10,6 +10,7 @@ data class FindAllHandOffResponse(
     @Serializable
     data class RouterWithStateDTO(
         val level: Long,
+        val detailLevel: Long,
         val score: Long,
         val ssid: String,
         val macAddress: String,

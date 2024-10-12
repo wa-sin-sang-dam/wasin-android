@@ -259,3 +259,20 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/gradle,android,androidstudio,windows,java
+admin/release/baselineProfiles/0/
+
+admin/release/baselineProfiles/1/
+
+admin/release/
+
+app/release/baselineProfiles/0/
+
+app/release/baselineProfiles/1/
+
+app/release/
+
+super_admin/release/baselineProfiles/0/
+
+super_admin/release/baselineProfiles/1/
+
+super_admin/release/

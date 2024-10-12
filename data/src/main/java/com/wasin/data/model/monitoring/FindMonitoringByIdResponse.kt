@@ -18,8 +18,8 @@ data class FindMonitoringByIdResponse (
     @Serializable
     data class MonitoringGraph(
         val labels: String,
-        val timeList: List<Long>,
-        val valueList: List<Long>
+        val timeList: List<Double>,
+        val valueList: List<Double>
     )
 
 }

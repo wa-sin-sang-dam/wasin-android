@@ -17,7 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.ShortButton
-import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.WithTitleAndRefresh
 import com.wasin.presentation._theme.gray_E8E8E8
 import com.wasin.presentation._theme.typography
 import com.wasin.presentation._util.LaunchedEffectEvent
@@ -28,7 +28,8 @@ fun BackOfficeScreen(
     viewModel: BackOfficeViewModel = hiltViewModel()
 ) {
     LaunchedEffectEvent(viewModel.eventFlow)
-    WithTitle(
+    WithTitleAndRefresh(
+        onRefresh = { viewModel.findWaitingList() },
         title = "관리자 승인 대기"
     ) {
         val waitingList = viewModel.waitingList.value.waitingList
