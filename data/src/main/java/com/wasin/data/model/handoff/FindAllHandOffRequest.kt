@@ -10,6 +10,7 @@ data class FindAllHandOffRequest(
     data class RouterDTO(
         val ssid: String,
         val macAddress: String,
-        val level: Long
+        val level: Long,
+        val detailLevel: Long
     )
 }

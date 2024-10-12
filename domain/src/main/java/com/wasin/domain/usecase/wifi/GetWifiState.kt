@@ -22,14 +22,14 @@ class GetWifiState @Inject constructor(
             if (success) {
                 val result = FindAllHandOffRequest(
                     wifiManager.scanResults.toMutableList().map {
-                        FindAllHandOffRequest.RouterDTO(it.SSID, it.BSSID, it.level.toLong())
+                        FindAllHandOffRequest.RouterDTO(it.SSID, it.BSSID, it.level.toLong(), it.level.toLong())
                     }
                 )
                 val currentSSID = wifiManager.connectionInfo.ssid ?: ""
                 emit(Resource.Success(Pair(currentSSID, result)))
             }
             else {
-                emit(Resource.Error("와이파이 목록을 가져오는 데 실패했습니다."))
+                emit(Resource.Error("단기간에 많은 요청을 하면 실패합니다."))
             }
         } catch(error: Exception) {
             emit(Resource.Error(getErrorMessage(error)))

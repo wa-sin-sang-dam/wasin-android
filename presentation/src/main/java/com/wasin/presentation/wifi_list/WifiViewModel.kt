@@ -126,7 +126,7 @@ class WifiViewModel @Inject constructor(
         _wifiList.value = _wifiList.value.copy(
             routerList = _wifiList.value.routerList.sortedByDescending{
                 if (sortFilter == WifiSort.RECOMMENDATION) {
-                   it.level
+                   it.detailLevel
                 }
                 else it.score
             }
@@ -146,7 +146,8 @@ class WifiViewModel @Inject constructor(
                                 FindAllHandOffRequest.RouterDTO(
                                     it.ssid.ifEmpty { "알 수 없는 SSID" },
                                     it.macAddress,
-                                    getWifiLevel(it.level)
+                                    getWifiLevel(it.level),
+                                    it.detailLevel
                                 )
                             } ?: emptyList()
                         )
@@ -184,7 +185,7 @@ class WifiViewModel @Inject constructor(
             wifiUseCase.getWifiList().collect { wifi ->
                 wifiRequest.value = wifiRequest.value.copy(
                     router = wifi.map {
-                        FindAllHandOffRequest.RouterDTO(it.ssid, it.macAddress, it.level)
+                        FindAllHandOffRequest.RouterDTO(it.ssid, it.macAddress, it.level, it.level)
                     }
                 )
                 getDBWithStateWifiList()
