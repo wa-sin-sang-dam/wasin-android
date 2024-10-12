@@ -28,7 +28,7 @@ class BackOfficeViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        fidnWaitingList()
+        findWaitingList()
     }
 
     fun acceptAdmin(userId: Long, name: String) {
@@ -50,7 +50,7 @@ class BackOfficeViewModel @Inject constructor(
         }
     }
 
-    private fun fidnWaitingList() {
+    fun findWaitingList() {
         viewModelScope.launch {
             findWaitingListUseCase().collect { response ->
                 when (response) {

@@ -32,7 +32,6 @@ fun MonitoringByRouterScreen(
         MonitoringTabLayer(
             state = viewModel.monitoring.value,
             selectedTabIndex = viewModel.selectedTabIndex.intValue,
-            onRefresh = { viewModel.refreshMetric() },
             onTabClick = { tabIndex, metricId ->
                 viewModel.onTabClick(tabIndex, metricId)
             }

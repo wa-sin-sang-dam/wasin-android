@@ -30,6 +30,8 @@ class ProfileViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<WasinEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    val isLoading = mutableStateOf(false)
+
     init {
         findAllProfile()
     }
@@ -41,6 +43,7 @@ class ProfileViewModel @Inject constructor(
                 return@launch
             }
             changeProfileUseCase(profileId).collect { response ->
+                isLoading.value = response is Resource.Loading
                 when (response) {
                     is Resource.Loading -> _eventFlow.emit(WasinEvent.Loading)
                     is Resource.Error -> _eventFlow.emit(WasinEvent.MakeToast(response.message))
@@ -94,7 +97,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun findAllProfile() {
+    fun findAllProfile() {
         viewModelScope.launch {
             findAllProfileUseCase().collect { response ->
                 when (response) {

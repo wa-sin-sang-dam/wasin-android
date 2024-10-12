@@ -36,7 +36,7 @@ import com.wasin.presentation._common.BlueLongButton
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
 import com.wasin.presentation._common.MyEmptyContent
-import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.WithTitleAndRefresh
 import com.wasin.presentation._common.clickAsSingle
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.getScoreColor
@@ -54,7 +54,8 @@ fun RouterListScreen(
 ) {
     val routerList = viewModel.routerListDTO.value.routerList
     LaunchedEffectEvent(viewModel.eventFlow)
-    WithTitle(
+    WithTitleAndRefresh(
+        onRefresh = { viewModel.refresh() },
         title = "라우터 관리",
         description = "라우터 상태에 따라 원활할 경우 초록색, 불안정할 경우 빨간색으로 나타나요. \n" +
                 "마커를 클릭하면 개별 라우터에 대한 상세 정보를 확인 및 편집하고 모니터링을 진행할 수 있어요."

@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import com.wasin.data.model.router.FindByRouterIdResponse
 import com.wasin.presentation._common.CompanyImageItem
 import com.wasin.presentation._common.ImageMarker
-import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.WithTitleAndRefresh
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.getScoreColor
 import com.wasin.presentation._theme.typography
@@ -41,8 +41,9 @@ fun RouterDetailScreen(
         eventFlow = viewModel.eventFlow,
         onNavigate = { navController.navigate(WasinScreen.RouterListScreen.route) }
     )
-    WithTitle(
-        title = viewModel.routerDTO.value.information.name
+    WithTitleAndRefresh(
+        title = viewModel.routerDTO.value.information.name,
+        onRefresh = { viewModel.refresh() }
     ) {
         item {
             CompanyAndRouter(

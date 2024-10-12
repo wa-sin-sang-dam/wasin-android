@@ -27,8 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberAxisGuidelineComponent
@@ -99,6 +97,7 @@ fun MonitoringScreen(
     navController: NavController,
     viewModel: MonitoringViewModel = hiltViewModel()
 ) {
+    val refreshState = rememberSwipeRefreshState(isRefreshing = false)
     LaunchedEffectEvent(viewModel.eventFlow)
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -111,7 +110,6 @@ fun MonitoringScreen(
         MonitoringTabLayer(
             state = viewModel.monitoring.value,
             selectedTabIndex = viewModel.selectedTabIndex.intValue,
-            onRefresh = { viewModel.refresh() },
             onTabClick = { tabIndex, metricId ->
                 viewModel.onTabClick(tabIndex, metricId)
             }
@@ -137,7 +135,6 @@ fun FilterMonitoring(
 fun MonitoringTabLayer(
     state: MonitoringMultipleState,
     selectedTabIndex: Int,
-    onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
 ){
     val modelProducer = remember { CartesianChartModelProducer() }
@@ -168,7 +165,6 @@ fun MonitoringTabLayer(
         MonitoringTabLayerContent(
             metrics = state.metrics,
             selectedTabIndex = selectedTabIndex,
-            onRefresh = onRefresh,
             onTabClick = onTabClick,
             modelProducer = modelProducer,
         )
@@ -179,13 +175,11 @@ fun MonitoringTabLayer(
 fun MonitoringTabLayerContent(
     metrics: FindMultipleMonitorResponse,
     selectedTabIndex: Int,
-    onRefresh: () -> Unit,
     onTabClick: (Int, Long) -> Unit,
     modelProducer: CartesianChartModelProducer
 ) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState (selectedTabIndex) { metrics.metricList.size }
-    val refreshState = rememberSwipeRefreshState(isRefreshing = false)
 
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
         if (!pagerState.isScrollInProgress) {
@@ -206,23 +200,17 @@ fun MonitoringTabLayerContent(
                 }
             }
         )
-        SwipeRefresh(
-            state = refreshState,
-            onRefresh = onRefresh,
-            indicator = { state, trigger -> SwipeRefreshIndicator(state, trigger) }
-        ) {
-            HorizontalPager(
-                state = pagerState,
-                pageSpacing = 15.dp,
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.Top
-            ) { page ->
-                MonitoringChart(
-                    modelProducer = modelProducer,
-                    graph = metrics.graphList,
-                    isSamePage = page == selectedTabIndex
-                )
-            }
+        HorizontalPager(
+            state = pagerState,
+            pageSpacing = 15.dp,
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.Top
+        ) { page ->
+            MonitoringChart(
+                modelProducer = modelProducer,
+                graph = metrics.graphList,
+                isSamePage = page == selectedTabIndex
+            )
         }
     }
 }
