@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wasin.data.model.profile.FindAllProfileResponse
-import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.MyCircularProgress
+import com.wasin.presentation._common.WithTitleAndRefresh
 import com.wasin.presentation._common.clickAsSingle
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.gray_B8B8B8
@@ -37,7 +38,8 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     LaunchedEffectEvent(eventFlow = viewModel.eventFlow)
-    WithTitle(
+    WithTitleAndRefresh(
+        onRefresh = { viewModel.findAllProfile() },
         title = "프로파일 설정",
         description = "프로파일에 따라 여러 공유기의 설정을 한 번에 변경할 수 있어요. 자동 변경일 경우 상황에 따라 최적의 프로파일을 시스템이 알아서 찾아서 변경해줘요."
     ) {
@@ -53,7 +55,8 @@ fun ProfileScreen(
                 enabled = !viewModel.profileDTO.value.isAuto,
                 activeProfileId = viewModel.profileDTO.value.activeProfileId,
                 profileList = viewModel.profileDTO.value.profiles,
-                changeProfile = { viewModel.changeProfile(it) }
+                changeProfile = { viewModel.changeProfile(it) },
+                isLoading = viewModel.isLoading.value
             )
         }
     }
@@ -122,7 +125,8 @@ fun ProfileSelect(
     enabled: Boolean,
     activeProfileId: Long,
     changeProfile: (Long) -> Unit,
-    profileList: List<FindAllProfileResponse.ProfileEachDTO>
+    profileList: List<FindAllProfileResponse.ProfileEachDTO>,
+    isLoading: Boolean
 ) {
     Column {
         Text(
@@ -135,15 +139,20 @@ fun ProfileSelect(
             style = typography.bodyLarge,
             modifier = Modifier.padding(top = 11.dp, bottom = 21.dp)
         )
-        profileList.forEach {
-            ProfileComponent(
-                title = it.title,
-                description = it.description,
-                tip = it.tip,
-                isSelected = it.profileId == activeProfileId,
-                onClick = { changeProfile(it.profileId) },
-                enabled = enabled
-            )
+        if (isLoading) {
+            MyCircularProgress()
+        }
+        else {
+            profileList.forEach {
+                ProfileComponent(
+                    title = it.title,
+                    description = it.description,
+                    tip = it.tip,
+                    isSelected = it.profileId == activeProfileId,
+                    onClick = { changeProfile(it.profileId) },
+                    enabled = enabled
+                )
+            }
         }
     }
 }
