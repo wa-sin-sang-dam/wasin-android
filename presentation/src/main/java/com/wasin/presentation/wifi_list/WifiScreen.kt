@@ -33,7 +33,7 @@ import com.wasin.presentation._common.GrayDivider
 import com.wasin.presentation._common.MyEmptyContent
 import com.wasin.presentation._common.ShortButton
 import com.wasin.presentation._common.TextFieldWithTitle
-import com.wasin.presentation._common.WithTitle
+import com.wasin.presentation._common.WithTitleAndRefresh
 import com.wasin.presentation._navigate.WasinScreen
 import com.wasin.presentation._theme.gray_808080
 import com.wasin.presentation._theme.typography
@@ -46,7 +46,8 @@ fun WifiScreen(
     viewModel: WifiViewModel = hiltViewModel(),
 ) {
     LaunchedEffectEvent(viewModel.eventFlow)
-    WithTitle(
+    WithTitleAndRefresh(
+        onRefresh = { viewModel.getWifiList() },
         title = "Wifi 연결",
         description = "자동 또는 수동으로 최적의 와이파이에 연결되도록 설정할 수 있어요.",
         containSetting = true,
@@ -113,6 +114,7 @@ fun WifiListComponent(
                     level = it.level.toInt(),
                     score = it.score.toInt(),
                     password = it.password.ifEmpty { password(it.ssid) },
+                    isSystemExist = it.isSystemExist,
                     isCurrentConnect = it.ssid == currentSSID,
                     connectWifi = connectWifi,
                     openWifiSetting = openWifiSetting
@@ -128,6 +130,7 @@ fun WifiItemComponent(
     level: Int = 0,
     score: Int = 0,
     password: String = "",
+    isSystemExist: Boolean,
     isCurrentConnect: Boolean = false,
     connectWifi: (String, String) -> Unit,
     openWifiSetting: () -> Unit,
@@ -149,7 +152,7 @@ fun WifiItemComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(modifier = Modifier.weight(1f)) {
-                WifiWithIcon(ssid, level, score)
+                WifiWithIcon(ssid, level, score, isSystemExist)
             }
             ShortButton(
                 text = "연결",
@@ -215,12 +218,12 @@ fun WifiPasswordDialog(
 }
 
 @Composable
-private fun WifiWithIcon(name: String, level: Int, score: Int) {
+private fun WifiWithIcon(name: String, level: Int, score: Int, isSystemExist: Boolean) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = getWifi(level)),
+            painter = painterResource(id = getWifi(level, isSystemExist)),
             contentDescription = "wifi level",
             modifier = Modifier
                 .padding(end = 15.dp)
