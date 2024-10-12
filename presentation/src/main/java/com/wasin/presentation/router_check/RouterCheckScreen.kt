@@ -21,7 +21,7 @@ fun RouterCheckScreen(
     val state = viewModel.result.value
     WithTitle(
         title = "라우터 점검 결과",
-        description = "라우터 점검 결과입니다. 문제가 있다면 SSH 접속 이후 ./check_status 명령어를 통해 라우터 초기화를 진행해주세요.",
+        description = "라우터 점검 결과입니다. 문제가 있다면 SSH 접속 이후 ./network_refresh 명령어를 통해 라우터 초기화를 진행해주세요.",
     ) {
         if (state.isLoading) {
             item { MyCircularProgress() }
