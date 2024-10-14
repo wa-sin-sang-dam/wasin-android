@@ -8,6 +8,7 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
@@ -43,15 +44,21 @@ class WasinWorkManager @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun doWork(): Result {
         // 와이파이 스캔으로 현재 안드로이드 내에 연결 가능한 와이파이 리스트 저장
+        Log.d("wasin_tag", "스캔 시작")
         getLocalWifiList()
+        
         if (isFail.value) {
+            Log.d("wasin_tag", "스캔 실패")
             return Result.failure()
         }
 
         // 서버에 접속해서 상태까지 불러옴
         getDBWithStateWifiList()
+        Log.d("wasin_tag", "DB 목록 조회")
+
         if (isFail.value || !wifiResponse.value.isAuto
             || currentSSID.value == wifiResponse.value.router.ssid) {
+            Log.d("wasin_tag", "DB 목록 조회 실패")
             return Result.failure()
         }
 
@@ -63,7 +70,10 @@ class WasinWorkManager @AssistedInject constructor(
         else {
             // Android 10 이상에서는 알림 보내서 열도록 변경
             // 1트에서 실패했다면 dataStore에 저장된 패스워드로 시도 (2트)
+            Log.d("wasin_tag", "패스워드 설정")
             sendNotification(wifiResponse.value.router.ssid)
+            Log.d("wasin_tag", "패스워드 설정")
+
         }
 
         if (isFail.value) return Result.failure()
@@ -110,7 +120,8 @@ class WasinWorkManager @AssistedInject constructor(
         FindBestHandOffRequest.RouterDTO(
             it.ssid.ifEmpty { "알 수 없는 SSID" },
             it.macAddress,
-            getWifiLevel(it.level)
+            getWifiLevel(it.level),
+            it.level
         )
 
     private suspend fun getDBWithStateWifiList() {
