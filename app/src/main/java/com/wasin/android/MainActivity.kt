@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
 
     private fun scheduleNotification() {
         val saveRequest = PeriodicWorkRequestBuilder<WasinWorkManager>(15, TimeUnit.MINUTES)
-            .setInitialDelay(0, TimeUnit.MILLISECONDS)
+            .setInitialDelay(1000*60, TimeUnit.MILLISECONDS)
             .build()
 
         WorkManager.getInstance(this).enqueue(saveRequest)
