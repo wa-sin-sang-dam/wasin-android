@@ -31,7 +31,7 @@ fun RouterLogScreen(
     ) {
         WithTitle(
             title = "라우터 로그",
-            description = "프로파일 변경 내역 및 라우터 상태를 출력한 내용입니다.",
+            description = "라우터 상태를 출력한 내용입니다.",
         ){
             if (state.isLoading) {
                 item { MyCircularProgress() }

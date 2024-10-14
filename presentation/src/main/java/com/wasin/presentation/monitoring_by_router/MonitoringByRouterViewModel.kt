@@ -26,7 +26,7 @@ class MonitoringByRouterViewModel @Inject constructor(
 ): ViewModel() {
 
     val selectedTabIndex = mutableIntStateOf(0)
-    val activeTime = mutableStateOf(TimeEnum.THIRTY_MINUTES_AGO)
+    val activeTime = mutableStateOf(TimeEnum.ONE_HOUR_AGO)
     private val metricId = mutableStateOf<Long?>(null)
     private val routerId = mutableIntStateOf(-1)
 

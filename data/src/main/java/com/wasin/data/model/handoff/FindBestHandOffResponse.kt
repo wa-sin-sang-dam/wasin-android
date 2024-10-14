@@ -10,6 +10,7 @@ data class FindBestHandOffResponse(
     @Serializable
     data class RouterWithStateDTO(
         val level: Long = 0,
+        val detailLevel: Long = 0,
         val score: Long = 0,
         val ssid: String = "",
         val macAddress: String = "",

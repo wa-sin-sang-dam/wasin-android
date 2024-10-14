@@ -126,9 +126,9 @@ class WifiViewModel @Inject constructor(
         _wifiList.value = _wifiList.value.copy(
             routerList = _wifiList.value.routerList.sortedByDescending{
                 if (sortFilter == WifiSort.RECOMMENDATION) {
-                   it.detailLevel
+                    it.score
                 }
-                else it.score
+                else it.detailLevel
             }
         )
         wifiSort.value = sortFilter

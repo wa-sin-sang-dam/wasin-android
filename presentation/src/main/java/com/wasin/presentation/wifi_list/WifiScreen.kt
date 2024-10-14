@@ -252,7 +252,7 @@ private fun WifiListTitle() {
         modifier = Modifier.padding(bottom = 13.dp)
     )
     Text(
-        text = "네트워크 품질을 확인할 수 있는 Wifi는 파란색으로, 정확히 알 수 없는 Wifi는 분홍색으로 표시돼요.",
+        text = "네트워크 품질을 확인할 수 있는 Wifi는 분홍색으로, 정확히 알 수 없는 Wifi는 파란색으로 표시돼요.",
         style = typography.bodyMedium
     )
 }

@@ -305,7 +305,7 @@ private fun MonitoringChart(
                     itemPlacer = HorizontalAxis.ItemPlacer.segmented(),
                     valueFormatter = { _, value, _ ->
                         dateTimeFormatter.format(
-                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong() + 60*60*9*1000))
+                            Date(TimeUnit.MILLISECONDS.toMillis(value.toLong()))
                         )
                     }
                 ),
